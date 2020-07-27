@@ -16,5 +16,8 @@ public class JenkinsTest {
         return "sickar";
     }
 
-
+    @GetMapping("/dd")
+    public String s2ika() {
+        return "dd hello";
+    }
 }
