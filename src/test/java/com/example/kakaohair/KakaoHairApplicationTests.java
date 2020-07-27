@@ -10,4 +10,8 @@ class KakaoHairApplicationTests {
     void contextLoads() {
     }
 
+    @Test
+    void jenkinsCItest() {
+
+    }
 }
