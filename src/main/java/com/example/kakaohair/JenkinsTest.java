@@ -15,9 +15,4 @@ public class JenkinsTest {
     public String sika() {
         return "sickar";
     }
-
-    @GetMapping("/sika2")
-    public String sik2a() {
-        return "sickar2";
-    }
 }
