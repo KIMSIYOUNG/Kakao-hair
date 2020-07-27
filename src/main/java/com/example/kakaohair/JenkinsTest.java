@@ -8,6 +8,6 @@ public class JenkinsTest {
 
     @GetMapping("/hihi")
     public String jenkins() {
-        return "jenkins works";
+        return "jenkins works!!";
     }
 }
