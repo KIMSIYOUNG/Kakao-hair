@@ -9,4 +9,9 @@ class KakaoHairApplicationTests {
     @Test
     void contextLoads() {
     }
+
+    @Test
+    void name() {
+
+    }
 }
