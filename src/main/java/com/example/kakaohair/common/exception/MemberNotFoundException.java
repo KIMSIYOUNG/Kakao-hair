@@ -1,4 +1,4 @@
-package com.example.kakaohair.common;
+package com.example.kakaohair.common.exception;
 
 public class MemberNotFoundException extends NotFoundException {
 

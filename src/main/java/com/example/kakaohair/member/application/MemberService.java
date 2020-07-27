@@ -3,8 +3,10 @@ package com.example.kakaohair.member.application;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.example.kakaohair.common.exception.MemberNotFoundException;
 import com.example.kakaohair.member.domain.Member;
 import com.example.kakaohair.member.domain.MemberRepository;
+import com.example.kakaohair.member.web.MemberResponse;
 import lombok.AllArgsConstructor;
 
 @AllArgsConstructor
@@ -17,5 +19,12 @@ public class MemberService {
         Member savedMember = memberRepository.save(member);
 
         return savedMember.getId();
+    }
+
+    public MemberResponse findByMemberId(final Long id) {
+        final Member member = memberRepository.findById(id)
+            .orElseThrow(() -> new MemberNotFoundException(id));
+
+        return MemberResponse.from(member);
     }
 }

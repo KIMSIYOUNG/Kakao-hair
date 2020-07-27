@@ -7,6 +7,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 
+import com.example.kakaohair.member.domain.Member;
 import com.example.kakaohair.member.domain.MemberFixture;
 import com.example.kakaohair.member.web.MemberCreateRequest;
 import io.restassured.RestAssured;
@@ -45,6 +46,19 @@ public class MemberAcceptanceTest {
     @Test
     void manageMember() {
         String resource = createMember();
+        Member findMember = fetchMember(resource);
+    }
+
+    private Member fetchMember(final String resource) {
+        return given()
+            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .when()
+            .get(resource)
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .as(Member.class);
     }
 
     private String createMember() {

@@ -1,4 +1,4 @@
-package com.example.kakaohair.common;
+package com.example.kakaohair.common.exception;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

@@ -1,4 +1,4 @@
-package com.example.kakaohair.common;
+package com.example.kakaohair.common.exception;
 
 import java.util.List;
 import java.util.stream.Collectors;
