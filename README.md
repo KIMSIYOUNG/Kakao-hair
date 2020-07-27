@@ -22,7 +22,7 @@
 ### 개발 관련
 - 단일 모듈 프로젝트 - 분리 가능성 고려
 - Process : ATDD - TDD (controller, service, repository, domain)
-- Test coverage : 90%
+- Test coverage : 95%
 - back-end - front-end 구분해서 진행
 - Simple Api documentation
 - CI/CD : Jenkins with docker
@@ -46,3 +46,8 @@
 - h2, mysql
 - jenkins, docker
 - intellij, mac os
+
+### 개발 순서
+- member(with Designer) - kakao Login 
+- shop - post - reservation
+- review - like - coupon - tag 
