@@ -10,4 +10,9 @@ public class JenkinsTest {
     public String jenkins() {
         return "jenkins works!!";
     }
+
+    @GetMapping("/sika")
+    public String sika() {
+        return "sickar";
+    }
 }
