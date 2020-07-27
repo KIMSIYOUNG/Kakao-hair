@@ -1,5 +1,6 @@
 package com.example.kakaohair.member.application;
 
+import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +30,11 @@ class MemberServiceTest {
     @DisplayName("회원이 정상적으로 생성된다.")
     @Test
     void create() {
-        // when(memberRepository.save(any(Member.class))).thenReturn(MemberFixture.memberWithId());
+        final Member expectedMember = MemberFixture.memberWithId();
+        when(memberRepository.save(any(Member.class))).thenReturn(expectedMember);
+
+        final Long createdId = memberService.create(MemberFixture.memberWithOutId());
+
+        assertThat(createdId).isEqualTo(expectedMember.getId());
     }
 }

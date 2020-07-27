@@ -17,6 +17,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+@AllArgsConstructor(access = AccessLevel.PROTECTED)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @MappedSuperclass
@@ -33,7 +34,4 @@ public class BaseEntity {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-
-    public BaseEntity(Long id, LocalDateTime createdAt, LocalDateTime updatedAt) {
-    }
 }

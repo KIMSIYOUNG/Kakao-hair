@@ -14,6 +14,8 @@ public class MemberCreateRequest {
     private String name;
 
     public Member toMember() {
-        return new Member(this.name);
+        return Member.builder()
+            .name(this.name)
+            .build();
     }
 }

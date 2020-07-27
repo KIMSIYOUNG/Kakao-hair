@@ -11,6 +11,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -19,12 +20,8 @@ public class Member extends BaseEntity {
     @NotBlank
     private String name;
 
-    public Member(String name) {
-        this.name = name;
-    }
-
-
-    Member(final Long id, final LocalDateTime createdAt, final LocalDateTime updatedAt) {
+    @Builder
+    Member(final Long id, final LocalDateTime createdAt, final LocalDateTime updatedAt, String name) {
         super(id, createdAt, updatedAt);
         this.name = name;
     }
