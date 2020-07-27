@@ -1,5 +1,7 @@
 package com.example.kakaohair.member.web;
 
+import javax.validation.constraints.NotBlank;
+
 import com.example.kakaohair.member.domain.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +13,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class MemberCreateRequest {
+    @NotBlank
     private String name;
 
     public Member toMember() {

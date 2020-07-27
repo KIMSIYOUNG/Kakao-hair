@@ -29,4 +29,8 @@ public class MemberFixture {
             .name(NAME)
             .build();
     }
+
+    public static MemberCreateRequest createWrongDto() {
+        return MemberCreateRequest.builder().build();
+    }
 }
