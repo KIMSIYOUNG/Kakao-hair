@@ -1,15 +1,20 @@
 package com.example.kakaohair.acceptance;
 
+import static org.assertj.core.api.Assertions.*;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.test.annotation.Rollback;
 
-import com.example.kakaohair.member.domain.Member;
+import com.example.kakaohair.member.application.MemberUpdateRequest;
 import com.example.kakaohair.member.domain.MemberFixture;
+import com.example.kakaohair.member.domain.MemberState;
 import com.example.kakaohair.member.web.MemberCreateRequest;
+import com.example.kakaohair.member.web.MemberResponse;
 import io.restassured.RestAssured;
 import io.restassured.specification.RequestSpecification;
 
@@ -44,29 +49,57 @@ public class MemberAcceptanceTest {
         then: 기존 회원이 삭제되었다.
      */
     @Test
+    @Rollback(false)
     void manageMember() {
-        String resource = createMember();
-        Member findMember = fetchMember(resource);
+        String resource = fetchCreateMember();
+        final MemberResponse findMember = fetchMember(resource);
+        String updatedResource = fetchUpdate(resource);
+        final MemberResponse updatedMember = fetchMember(updatedResource);
+        assertThat(findMember).isEqualToIgnoringGivenFields(updatedMember, "name");
+        fetchDelete(resource);
+        final MemberResponse deletedMember = fetchMember(updatedResource);
+        assertThat(deletedMember.getMemberState()).isEqualTo(MemberState.DELETED);
     }
 
-    private Member fetchMember(final String resource) {
+    private void fetchDelete(final String resource) {
+        given()
+            .when()
+            .delete(resource)
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.NO_CONTENT.value());
+    }
+
+    private String fetchUpdate(final String resource) {
+        MemberUpdateRequest request = MemberFixture.updateDto();
+
         return given()
-            .accept(MediaType.APPLICATION_JSON_VALUE)
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .body(request)
+            .when()
+            .put(resource)
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.OK.value())
+            .extract()
+            .header("Location");
+    }
+
+    private MemberResponse fetchMember(final String resource) {
+        return given()
+            .contentType(MediaType.APPLICATION_JSON_VALUE)
             .when()
             .get(resource)
             .then()
             .log().all()
             .statusCode(HttpStatus.OK.value())
             .extract()
-            .as(Member.class);
+            .as(MemberResponse.class);
     }
 
-    private String createMember() {
+    private String fetchCreateMember() {
         MemberCreateRequest request = MemberFixture.createDto();
-        return fetchCreateMember(request);
-    }
 
-    private String fetchCreateMember(final MemberCreateRequest request) {
         return given()
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(request)

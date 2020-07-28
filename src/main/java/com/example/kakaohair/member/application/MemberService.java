@@ -21,10 +21,24 @@ public class MemberService {
         return savedMember.getId();
     }
 
+    @Transactional(readOnly = true)
     public MemberResponse findByMemberId(final Long id) {
-        final Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new MemberNotFoundException(id));
+        final Member member = find(id);
 
         return MemberResponse.from(member);
+    }
+
+    public void update(final Long id, MemberUpdateRequest request) {
+        final Member member = find(id);
+        member.changeInfo(request);
+    }
+
+    public void delete(final Long id) {
+        memberRepository.deleteById(id);
+    }
+
+    private Member find(final Long memberId) {
+        return memberRepository.findById(memberId)
+            .orElseThrow(() -> new MemberNotFoundException(memberId));
     }
 }

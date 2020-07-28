@@ -50,4 +50,25 @@ class MemberServiceTest {
 
         assertThat(findMember).isEqualToIgnoringNullFields(expectedMember);
     }
+
+    @DisplayName("회원의 이름을 변경한 경우 정상 반영된다.")
+    @Test
+    void updateName() {
+        final Member originMember = MemberFixture.memberWithId();
+        final MemberUpdateRequest updateDto = MemberFixture.updateDto();
+        when(memberRepository.findById(anyLong())).thenReturn(Optional.of(MemberFixture.updatedMember()));
+
+        memberService.update(originMember.getId(), updateDto);
+        final MemberResponse response = memberService.findByMemberId(originMember.getId());
+
+        assertThat(originMember.getName()).isNotEqualTo(response.getName());
+        assertThat(updateDto.getName()).isEqualTo(response.getName());
+    }
+
+    @DisplayName("회원을 삭제하면 repository를 실행시킨다.")
+    @Test
+    void delete() {
+        memberService.delete(anyLong());
+        verify(memberRepository).deleteById(anyLong());
+    }
 }

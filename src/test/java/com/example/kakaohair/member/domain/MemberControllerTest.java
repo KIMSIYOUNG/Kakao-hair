@@ -20,6 +20,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import com.example.kakaohair.common.exception.ErrorCode;
 import com.example.kakaohair.common.exception.MemberNotFoundException;
 import com.example.kakaohair.member.application.MemberService;
+import com.example.kakaohair.member.application.MemberUpdateRequest;
 import com.example.kakaohair.member.web.MemberController;
 import com.example.kakaohair.member.web.MemberCreateRequest;
 import com.example.kakaohair.member.web.MemberResponse;
@@ -97,5 +98,46 @@ class MemberControllerTest {
         )
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("code").value(ErrorCode.MEMBER_NOT_FOUND.getCode()));
+    }
+
+    @DisplayName("아이디를 기반으로 회원을 조회한다.")
+    @Test
+    void deleteById() throws Exception {
+        mockMvc.perform(delete("/api/members/1000")
+        )
+            .andExpect(status().isNoContent());
+    }
+
+    @DisplayName("회원의 이름을 수정하는 요청을 정상 처리한다.")
+    @Test
+    void updateName() throws Exception {
+        final MemberUpdateRequest request = MemberFixture.updateDto();
+
+        mockMvc.perform(patch("/api/members/100")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(request))
+        )
+            .andExpect(status().isOk())
+            .andExpect(header().exists("Location"));
+    }
+
+    @DisplayName("이름 수정시 잘못된 Json을 전달하는 경우 예외를 반환한다.")
+    @Test
+    void updateRequestException() throws Exception {
+        final MemberUpdateRequest request = MemberFixture.updateWrongDto();
+
+        mockMvc.perform(patch("/api/members/100")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(objectMapper.writeValueAsBytes(request))
+        )
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("code").value(ErrorCode.INVALID_REQUEST.getCode()));
+    }
+
+    @DisplayName("회원이 정상적으로 삭제된다.")
+    @Test
+    void memberDelete() throws Exception {
+        mockMvc.perform(delete("/api/members/100"))
+            .andExpect(status().isNoContent());
     }
 }

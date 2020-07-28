@@ -3,6 +3,7 @@ package com.example.kakaohair.member.web;
 import javax.validation.constraints.NotBlank;
 
 import com.example.kakaohair.member.domain.Member;
+import com.example.kakaohair.member.domain.MemberState;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -19,6 +20,7 @@ public class MemberCreateRequest {
     public Member toMember() {
         return Member.builder()
             .name(this.name)
+            .memberState(MemberState.ACTIVE)
             .build();
     }
 }
