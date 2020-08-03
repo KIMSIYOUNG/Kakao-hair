@@ -32,3 +32,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+### properties ###
+/src/main/resources/application-jwt.properties
+/src/main/resources/application-oauth.properties

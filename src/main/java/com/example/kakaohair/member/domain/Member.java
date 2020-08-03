@@ -28,9 +28,12 @@ public class Member extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private MemberState memberState;
 
+    private String socialId;
+
     @Builder
-    Member(Long id, LocalDateTime createdAt, LocalDateTime updatedAt, String name, MemberState memberState) {
+    Member(Long id, String socialId, LocalDateTime createdAt, LocalDateTime updatedAt, String name, MemberState memberState) {
         super(id, createdAt, updatedAt);
+        this.socialId = socialId;
         this.name = name;
         this.memberState = memberState;
     }

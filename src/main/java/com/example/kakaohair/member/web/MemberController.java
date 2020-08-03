@@ -1,7 +1,9 @@
 package com.example.kakaohair.member.web;
 
+import java.io.IOException;
 import java.net.URI;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.springframework.http.ResponseEntity;
@@ -12,8 +14,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.kakaohair.common.infra.kakao.LoginService;
+import com.example.kakaohair.common.infra.kakao.TokenResponse;
+import com.example.kakaohair.member.SocialInfo;
 import com.example.kakaohair.member.application.MemberService;
 import com.example.kakaohair.member.application.MemberUpdateRequest;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +29,23 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/members")
 public class MemberController {
     private final MemberService memberService;
+    private final LoginService loginService;
+
+    @GetMapping("/login")
+    public ResponseEntity<Void> loginBySocial(HttpServletResponse response) throws IOException {
+        String codeUrl = loginService.getCodeUrl();
+        response.sendRedirect(codeUrl);
+
+        return ResponseEntity.ok().location(URI.create(codeUrl)).build();
+    }
+
+    @GetMapping("/token")
+    public ResponseEntity<TokenResponse> createToken(@RequestParam String code) {
+        SocialInfo socialInfo = loginService.getSocialInfo(code);
+        TokenResponse customToken = memberService.tokenFrom(socialInfo);
+
+        return ResponseEntity.ok(customToken);
+    }
 
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody MemberCreateRequest request) {
