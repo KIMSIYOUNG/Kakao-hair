@@ -21,14 +21,14 @@ public class MemberService {
     private final JwtGenerator jwtGenerator;
 
     public TokenResponse tokenFrom(SocialInfo socialInfo) {
-        final Member member = memberRepository.findBySocialId()
+        final Member member = memberRepository.findBySocialId(socialInfo.getId())
             .orElseGet(() -> createMember(Member.builder()
                 .name(socialInfo.getName())
                 .socialId(socialInfo.getId())
                 .memberState(MemberState.ACTIVE)
                 .build()));
 
-        return jwtGenerator.createCustomToken(member.getId(), member.getSocialId());
+        return jwtGenerator.createCustomToken(member.getSocialId());
     }
 
     private Member createMember(Member member) {

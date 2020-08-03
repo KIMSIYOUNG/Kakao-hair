@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -19,6 +20,7 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.example.kakaohair.common.exception.ErrorCode;
 import com.example.kakaohair.common.exception.MemberNotFoundException;
+import com.example.kakaohair.common.infra.kakao.KakaoLoginService;
 import com.example.kakaohair.member.application.MemberService;
 import com.example.kakaohair.member.application.MemberUpdateRequest;
 import com.example.kakaohair.member.web.MemberController;
@@ -27,6 +29,7 @@ import com.example.kakaohair.member.web.MemberResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @WebMvcTest(MemberController.class)
+@Import(KakaoLoginService.class)
 class MemberControllerTest {
     private MockMvc mockMvc;
 
@@ -113,7 +116,7 @@ class MemberControllerTest {
     void updateName() throws Exception {
         final MemberUpdateRequest request = MemberFixture.updateDto();
 
-        mockMvc.perform(patch("/api/members/100")
+        mockMvc.perform(put("/api/members/100")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(request))
         )
@@ -126,7 +129,7 @@ class MemberControllerTest {
     void updateRequestException() throws Exception {
         final MemberUpdateRequest request = MemberFixture.updateWrongDto();
 
-        mockMvc.perform(patch("/api/members/100")
+        mockMvc.perform(put("/api/members/100")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(request))
         )

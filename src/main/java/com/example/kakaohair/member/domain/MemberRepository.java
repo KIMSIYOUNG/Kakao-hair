@@ -17,5 +17,5 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberCus
     @Override
     void deleteAll();
 
-    Optional<Member> findBySocialId();
+    Optional<Member> findBySocialId(String socialId);
 }

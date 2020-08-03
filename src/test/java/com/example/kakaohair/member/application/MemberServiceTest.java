@@ -12,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.example.kakaohair.common.JwtGenerator;
 import com.example.kakaohair.member.domain.Member;
 import com.example.kakaohair.member.domain.MemberFixture;
 import com.example.kakaohair.member.domain.MemberRepository;
@@ -25,9 +26,12 @@ class MemberServiceTest {
     @Mock
     private MemberRepository memberRepository;
 
+    @Mock
+    private JwtGenerator jwtGenerator;
+
     @BeforeEach
     void setUp() {
-        this.memberService = new MemberService(memberRepository);
+        this.memberService = new MemberService(memberRepository, jwtGenerator);
     }
 
     @DisplayName("회원이 정상적으로 생성된다.")

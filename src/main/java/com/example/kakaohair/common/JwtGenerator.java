@@ -20,13 +20,13 @@ public class JwtGenerator {
     private final String secret;
     private final Long expireTime;
 
-    public JwtGenerator(@Value("${jwt.secret.key}") String secret, @Value("${jwt.expire.time") Long expireTime) {
+    public JwtGenerator(@Value("${jwt.secret.key}") String secret, @Value("${jwt.expire.time}") Long expireTime) {
         this.secret = Base64.getEncoder().encodeToString(secret.getBytes());
         this.expireTime = expireTime;
     }
 
-    public TokenResponse createCustomToken(Long id, String socialId) {
-        final Claims claims = Jwts.claims().setSubject(String.valueOf(id)).setSubject(socialId);
+    public TokenResponse createCustomToken(String socialId) {
+        final Claims claims = Jwts.claims().setSubject(socialId);
 
         Date now = new Date();
         Date validateTime = new Date(now.getTime() + expireTime);

@@ -2,19 +2,19 @@ package com.example.kakaohair.common.infra.kakao;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import com.example.kakaohair.member.SocialInfo;
 
-@Component
+@Service
 public class KakaoLoginService implements LoginService {
     private static final String AUTHORIZE_PATH = "/oauth/authorize";
     private static final String RESPONSE_TYPE = "response_type";
     private static final String CLIENT_ID = "client_id";
     private static final String REDIRECT_URI = "redirect_uri";
-    private static final String REDIRECT_PATH = "/api/login/token";
+    private static final String REDIRECT_PATH = "/oauth/token";
     private static final String OAUTH_TOKEN_PATH = "/oauth/token";
     private static final String CLIENT_SECRET = "client_secret";
     private static final String GRANT_TYPE = "grant_type";
@@ -29,7 +29,7 @@ public class KakaoLoginService implements LoginService {
     private final String clientIdValue;
     private final String clientSecretValue;
     private final String responseTypeValue;
-    private final String grantTypeValue;
+    private final String grantType;
 
     public KakaoLoginService(
         @Value("${kakao.authorizeUri}") String authorizeUri,
@@ -38,14 +38,14 @@ public class KakaoLoginService implements LoginService {
         @Value("${kakao.clientId}") String clientIdValue,
         @Value("${kakao.clientSecret}") String clientSecretValue,
         @Value("${kakao.responseType}") String responseTypeValue,
-        @Value("${kakao.grantType}") String grantTypeValue) {
+        @Value("${kakao.grantType}") String grantType) {
         this.authorizeUri = authorizeUri;
         this.apiUri = apiUri;
         this.serverUri = serverUri;
         this.clientIdValue = clientIdValue;
         this.clientSecretValue = clientSecretValue;
         this.responseTypeValue = responseTypeValue;
-        this.grantTypeValue = grantTypeValue;
+        this.grantType = grantType;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class KakaoLoginService implements LoginService {
         return webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path(OAUTH_TOKEN_PATH)
-                .queryParam(GRANT_TYPE, grantTypeValue)
+                .queryParam(GRANT_TYPE, grantType)
                 .queryParam(CLIENT_ID, clientIdValue)
                 .queryParam(CLIENT_SECRET, clientSecretValue)
                 .queryParam(CODE, code)
@@ -91,7 +91,7 @@ public class KakaoLoginService implements LoginService {
             .uri(uriBuilder -> uriBuilder
                 .path(USER_INFO_PATH)
                 .build())
-            .header(AUTHORIZATION, AUTHORIZATION_TYPE + getSocialToken(code))
+            .header(AUTHORIZATION, AUTHORIZATION_TYPE + getSocialToken(code).getAccessToken())
             .retrieve()
             .bodyToMono(KakaoUserResponse.class)
             .block();
