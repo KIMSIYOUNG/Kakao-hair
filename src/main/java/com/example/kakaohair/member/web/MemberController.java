@@ -41,8 +41,9 @@ public class MemberController {
 
     @GetMapping("/oauth2/token")
     public ResponseEntity<TokenResponse> createToken(@RequestParam String code) {
-        SocialInfo socialInfo = loginService.getSocialInfo(code);
-        TokenResponse customToken = memberService.tokenFrom(socialInfo);
+        final TokenResponse kakaoToken = loginService.getSocialToken(code);
+        final SocialInfo loginInfo = loginService.getSocialInfo(kakaoToken);
+        final TokenResponse customToken = memberService.tokenFrom(loginInfo);
 
         return ResponseEntity.ok(customToken);
     }

@@ -13,10 +13,8 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import com.example.kakaohair.common.JwtGenerator;
 import com.example.kakaohair.member.SocialInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -28,9 +26,6 @@ import okhttp3.mockwebserver.RecordedRequest;
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class KakaoLoginServiceTest {
     private KakaoLoginService kakaoLoginService;
-
-    @MockBean
-    private JwtGenerator jwtGenerator;
 
     private MockWebServer mockServer;
 
@@ -45,15 +40,14 @@ class KakaoLoginServiceTest {
     @BeforeEach
     void setUp() throws IOException {
         mockServer = new MockWebServer();
-        mockServer.start();
         mockServerUrl = mockServer.url("/").toString();
         kakaoLoginService = new KakaoLoginService(
             mockServerUrl, mockServerUrl, SERVER_URI, CLIENT_ID_VALUE,
             CLIENT_SECRET_VALUE, RESPONSE_TYPE_VALUE, GRANT_TYPE_VALUE);
-        SetMockEnv();
+        this.setMockEnv();
     }
 
-    private void SetMockEnv() throws JsonProcessingException {
+    private void setMockEnv() throws JsonProcessingException {
         tokenResponse = new MockResponse()
             .addHeader("Content-Type", "application/json;charset=UTF-8")
             .setResponseCode(200)
@@ -85,6 +79,7 @@ class KakaoLoginServiceTest {
         mockServer.shutdown();
     }
 
+    @DisplayName("클라이언트가 받아온 코드를 URL을 통해 받는다.")
     @Test
     void getCode() {
         final String expectedUri = new DefaultUriBuilderFactory().builder()
@@ -111,7 +106,7 @@ class KakaoLoginServiceTest {
     @DisplayName("외부 API에서 제공하는 유저정보를 받아온다.")
     @Test
     void getUserInfoByKakao() throws JsonProcessingException {
-        final SocialInfo socialInfo = kakaoLoginService.getSocialInfo(ACCESS_TOKEN);
+        final SocialInfo socialInfo = kakaoLoginService.getSocialInfo(TokenResponse.of(ACCESS_TOKEN));
         final String body = userResponse.getBody().readString(StandardCharsets.UTF_8);
         final SocialInfo expectedInfo = objectMapper.readValue(body, SocialInfo.class);
 

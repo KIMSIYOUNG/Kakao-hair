@@ -1,5 +1,7 @@
 package com.example.kakaohair.common.infra.kakao;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -55,8 +57,7 @@ public class KakaoLoginService implements LoginService {
             .queryParam(RESPONSE_TYPE, responseTypeValue)
             .queryParam(CLIENT_ID, clientIdValue)
             .queryParam(REDIRECT_URI, serverUri + REDIRECT_PATH)
-            .build()
-            .toString();
+            .build().toString();
     }
 
     @Override
@@ -65,7 +66,7 @@ public class KakaoLoginService implements LoginService {
             .baseUrl(authorizeUri)
             .build();
 
-        return webClient.post()
+        final KakaoTokenResponse kakaoTokenResponse = webClient.post()
             .uri(uriBuilder -> uriBuilder
                 .path(OAUTH_TOKEN_PATH)
                 .queryParam(GRANT_TYPE, grantType)
@@ -77,12 +78,14 @@ public class KakaoLoginService implements LoginService {
             .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .accept(MediaType.APPLICATION_JSON)
             .retrieve()
-            .bodyToMono(TokenResponse.class)
+            .bodyToMono(KakaoTokenResponse.class)
             .block();
+
+        return TokenResponse.of(Objects.requireNonNull(kakaoTokenResponse, "kakao(token) bad request"));
     }
 
     @Override
-    public SocialInfo getSocialInfo(final String code) {
+    public SocialInfo getSocialInfo(final TokenResponse kakaoToken) {
         WebClient webClient = WebClient.builder()
             .baseUrl(apiUri)
             .build();
@@ -91,11 +94,11 @@ public class KakaoLoginService implements LoginService {
             .uri(uriBuilder -> uriBuilder
                 .path(USER_INFO_PATH)
                 .build())
-            .header(AUTHORIZATION, AUTHORIZATION_TYPE + getSocialToken(code).getAccessToken())
+            .header(AUTHORIZATION, AUTHORIZATION_TYPE + kakaoToken.getAccessToken())
             .retrieve()
             .bodyToMono(KakaoUserResponse.class)
             .block();
 
-        return SocialInfo.from(kakaoUserResponse);
+        return SocialInfo.from(Objects.requireNonNull(kakaoUserResponse, "kakao(userInfo) bad request"));
     }
 }

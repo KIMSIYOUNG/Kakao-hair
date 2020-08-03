@@ -2,13 +2,16 @@ package com.example.kakaohair.member.domain;
 
 import java.time.LocalDateTime;
 
+import com.example.kakaohair.member.SocialInfo;
 import com.example.kakaohair.member.application.MemberUpdateRequest;
 import com.example.kakaohair.member.web.MemberCreateRequest;
 
 public class MemberFixture {
     public static final String NAME = "TEST_NAME";
+    public static final String EMAIL = "TEST_NAME@TEST_EMAIL";
     public static final String UPDATE_NAME = "UPDATED_NAME";
     public static final long ID = 1L;
+    public static final String SOCIAL_ID = "KAKAO-3214";
 
     public static MemberCreateRequest createDto() {
         return MemberCreateRequest.builder()
@@ -57,5 +60,19 @@ public class MemberFixture {
 
     public static MemberUpdateRequest updateWrongDto() {
         return MemberUpdateRequest.builder().build();
+    }
+
+    public static Member socialMember() {
+        return memberWithId().toBuilder()
+            .socialId(SOCIAL_ID)
+            .build();
+    }
+
+    public static SocialInfo socialInfo() {
+        return SocialInfo.builder()
+            .id(SOCIAL_ID)
+            .email(EMAIL)
+            .name(NAME)
+            .build();
     }
 }

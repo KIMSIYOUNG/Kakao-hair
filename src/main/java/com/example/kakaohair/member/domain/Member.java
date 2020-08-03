@@ -30,7 +30,7 @@ public class Member extends BaseEntity {
 
     private String socialId;
 
-    @Builder
+    @Builder(toBuilder = true)
     Member(Long id, String socialId, LocalDateTime createdAt, LocalDateTime updatedAt, String name, MemberState memberState) {
         super(id, createdAt, updatedAt);
         this.socialId = socialId;

@@ -7,8 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 
-@AllArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @ConstructorProperties({"accessToken", "tokenType",
-    "refreshToken", "expiresIn", "refreshTokenExpiresIn", "scope"}))
+@AllArgsConstructor(access = AccessLevel.PRIVATE, onConstructor_ = @ConstructorProperties({"access_token", "token_type",
+    "refresh_token", "expires_in", "refresh_token_expires_in", "scope"}))
 @Builder
 @Getter
 public class KakaoTokenResponse {

@@ -13,7 +13,7 @@ import lombok.Getter;
 
 @AllArgsConstructor(onConstructor_ = @ConstructorProperties({"id", "nickname",
     "profileImage", "thumbnailImage", "hasEmail", "isEmailValid", "isEmailVerified", "email", "emailNeedsAgreement",
-    "hasBirthday", "birthdayNeedsAgreement", "birthday", "hasGender", "genderNeedsAgreement"}))
+    "hasBirthday", "birthdayNeedsAgreement", "birthday", "genderNeedsAgreement"}))
 @Builder
 @Getter
 @JsonNaming(value = PropertyNamingStrategy.SnakeCaseStrategy.class)
@@ -30,7 +30,6 @@ public class KakaoUserResponse {
     private boolean hasBirthday;
     private boolean birthdayNeedsAgreement;
     private String birthday;
-    private boolean hasGender;
     private boolean genderNeedsAgreement;
 
     @JsonProperty("properties")
@@ -51,7 +50,6 @@ public class KakaoUserResponse {
         this.hasBirthday = Boolean.parseBoolean(kakaoAccount.get("has_birthday"));
         this.birthdayNeedsAgreement = Boolean.parseBoolean(kakaoAccount.get("birthday_needs_agreement"));
         this.birthday = kakaoAccount.get("birthday");
-        this.hasGender = Boolean.parseBoolean(kakaoAccount.get("has_gender"));
         this.genderNeedsAgreement = Boolean.parseBoolean(kakaoAccount.get("gender_needs_agreement"));
     }
 }

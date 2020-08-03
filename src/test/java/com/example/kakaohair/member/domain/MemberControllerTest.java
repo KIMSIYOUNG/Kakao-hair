@@ -1,5 +1,7 @@
 package com.example.kakaohair.member.domain;
 
+import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
@@ -14,6 +16,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -21,6 +24,9 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import com.example.kakaohair.common.exception.ErrorCode;
 import com.example.kakaohair.common.exception.MemberNotFoundException;
 import com.example.kakaohair.common.infra.kakao.KakaoLoginService;
+import com.example.kakaohair.common.infra.kakao.LoginService;
+import com.example.kakaohair.common.infra.kakao.TokenResponse;
+import com.example.kakaohair.member.SocialInfo;
 import com.example.kakaohair.member.application.MemberService;
 import com.example.kakaohair.member.application.MemberUpdateRequest;
 import com.example.kakaohair.member.web.MemberController;
@@ -31,6 +37,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 @WebMvcTest(MemberController.class)
 @Import(KakaoLoginService.class)
 class MemberControllerTest {
+    private static final String REDIRECT_URL = "https:/kauth.kakao.com/oauth/authorize?response_type=code&client_id=AAA&redirect_uri=BBB";
+
     private MockMvc mockMvc;
 
     @Autowired
@@ -38,6 +46,9 @@ class MemberControllerTest {
 
     @MockBean
     private MemberService memberService;
+
+    @MockBean
+    private LoginService loginService;
 
     @BeforeEach
     void setUp(WebApplicationContext context) {
@@ -61,6 +72,38 @@ class MemberControllerTest {
         )
             .andExpect(status().isCreated())
             .andExpect(header().string("Location", "/api/members/1"));
+    }
+
+    @DisplayName("로그인을 요청하면 소셜로그인 페이지로 리다이랙트 한다.")
+    @Test
+    void login() throws Exception {
+        when(loginService.getCodeUrl()).thenReturn(REDIRECT_URL);
+        final MvcResult mvcResult = mockMvc.perform(get("/api/members/login"))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+        final String location = mvcResult.getResponse().getHeader("Location");
+
+        assertAll(
+            () -> assertThat(location.contains("response_type")).isTrue(),
+            () -> assertThat(location.contains("client_id")).isTrue(),
+            () -> assertThat(location.contains("redirect_uri")).isTrue()
+        );
+    }
+
+    @DisplayName("토큰을 정상적으로 반환한다.")
+    @Test
+    void createToken() throws Exception {
+        final TokenResponse tokenExample = TokenResponse.of("TEST");
+        when(loginService.getSocialToken(anyString())).thenReturn(tokenExample);
+        final SocialInfo socialInfoExample = MemberFixture.socialInfo();
+        when(loginService.getSocialInfo(tokenExample)).thenReturn(socialInfoExample);
+        when(memberService.tokenFrom(socialInfoExample)).thenReturn(TokenResponse.of("TEST"));
+
+        mockMvc.perform(get("/api/members/oauth2/token")
+            .param("code", "TEST")
+        )
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("accessToken").value("TEST"));
     }
 
     @DisplayName("회원을 생성 요청의 body 가 잘못된 경우 Invalid 된다.")

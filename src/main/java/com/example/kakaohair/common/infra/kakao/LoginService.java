@@ -8,5 +8,5 @@ public interface LoginService {
 
     TokenResponse getSocialToken(String code);
 
-    SocialInfo getSocialInfo(String code);
+    SocialInfo getSocialInfo(TokenResponse socialToken);
 }

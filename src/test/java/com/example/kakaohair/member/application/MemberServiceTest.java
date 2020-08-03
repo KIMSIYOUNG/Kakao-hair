@@ -1,7 +1,8 @@
 package com.example.kakaohair.member.application;
 
+import static com.example.kakaohair.member.domain.MemberFixture.*;
 import static org.assertj.core.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.BDDMockito.*;
 
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.kakaohair.common.JwtGenerator;
+import com.example.kakaohair.common.infra.kakao.TokenResponse;
 import com.example.kakaohair.member.domain.Member;
 import com.example.kakaohair.member.domain.MemberFixture;
 import com.example.kakaohair.member.domain.MemberRepository;
@@ -74,5 +76,28 @@ class MemberServiceTest {
     void delete() {
         memberService.delete(anyLong());
         verify(memberRepository).deleteById(anyLong());
+    }
+
+    @DisplayName("소셜 ID가 존재하는 경우, 회원을 정상 조회한다.")
+    @Test
+    void findBySocialId() {
+        given(memberRepository.findBySocialId(anyString())).willReturn(Optional.of(MemberFixture.socialMember()));
+        final TokenResponse expectedToken = TokenResponse.of(MemberFixture.socialMember().getSocialId());
+        given(jwtGenerator.createCustomToken(anyString())).willReturn(expectedToken);
+
+        final TokenResponse actual = memberService.tokenFrom(MemberFixture.socialInfo());
+        assertThat(actual.getAccessToken()).isEqualTo(expectedToken.getAccessToken());
+    }
+
+    @DisplayName("소셜 아이디가 없는 경우 회원을 생성한다.")
+    @Test
+    void createdBySocialId() {
+        given(memberRepository.findBySocialId(anyString())).willReturn(Optional.empty());
+        given(memberRepository.save(any(Member.class))).willReturn(MemberFixture.socialMember());
+        final TokenResponse expectedToken = TokenResponse.of(SOCIAL_ID);
+        given(jwtGenerator.createCustomToken(anyString())).willReturn(expectedToken);
+
+        final TokenResponse actual = memberService.tokenFrom(MemberFixture.socialInfo());
+        assertThat(actual.getAccessToken()).isEqualTo(expectedToken.getAccessToken());
     }
 }
