@@ -9,4 +9,14 @@
     - [x] service test
     - [x] repository test
 
-- profile update (after kakao login)
+### kakao login
+
+- kakao login
+
+- interceptor | methodArgumentResolver
+
+- role
+
+### Image upload
+
+- profile update (after kakao login)  

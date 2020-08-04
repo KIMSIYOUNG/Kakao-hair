@@ -13,6 +13,9 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
+import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
 import com.example.kakaohair.member.SocialInfo;
@@ -29,6 +32,8 @@ class KakaoLoginServiceTest {
 
     private MockWebServer mockServer;
 
+    private WebClient webClient;
+
     private String mockServerUrl;
 
     @Autowired
@@ -44,6 +49,10 @@ class KakaoLoginServiceTest {
         kakaoLoginService = new KakaoLoginService(
             mockServerUrl, mockServerUrl, SERVER_URI, CLIENT_ID_VALUE,
             CLIENT_SECRET_VALUE, RESPONSE_TYPE_VALUE, GRANT_TYPE_VALUE);
+        webClient = WebClient.builder()
+            .clientConnector(new ReactorClientHttpConnector())
+            .baseUrl(mockServer.url("/").toString())
+            .build();
         this.setMockEnv();
     }
 
@@ -111,5 +120,12 @@ class KakaoLoginServiceTest {
         final SocialInfo expectedInfo = objectMapper.readValue(body, SocialInfo.class);
 
         assertThat(socialInfo).isEqualToIgnoringNullFields(expectedInfo);
+    }
+
+    @DisplayName("잘못된 요청을 보낸 경우 404응답을 반환한다.")
+    @Test
+    void badRequest() {
+        assertThatThrownBy(() -> webClient.get().uri("BAD_BAD_REQUEST_URL")
+            .retrieve().bodyToMono(String.class).block()).isInstanceOf(WebClientException.class);
     }
 }
