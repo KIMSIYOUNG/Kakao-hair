@@ -1,4 +1,4 @@
-package com.example.kakaohair.member.application;
+package com.example.kakaohair.user.member.web;
 
 import javax.validation.constraints.NotBlank;
 

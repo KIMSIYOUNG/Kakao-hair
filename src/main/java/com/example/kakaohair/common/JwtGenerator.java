@@ -47,7 +47,7 @@ public class JwtGenerator {
         try {
             return Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
         } catch (JwtException | IllegalArgumentException e) {
-            throw new TokenInvalidException("토큰이 만료되었습니다. 다시 로그인 해주세요.", ErrorCode.TOKEN_EXPIRED);
+            throw new TokenInvalidException("토큰이 만료되었습니다. 다시 로그인 해주세요.", ErrorCode.TOKEN_INVALID);
         }
     }
 }

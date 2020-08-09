@@ -1,6 +1,6 @@
-package com.example.kakaohair.member.application;
+package com.example.kakaohair.user.member.application;
 
-import static com.example.kakaohair.member.domain.MemberFixture.*;
+import static com.example.kakaohair.user.member.domain.MemberFixture.*;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
@@ -15,10 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.example.kakaohair.common.JwtGenerator;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
-import com.example.kakaohair.member.domain.Member;
-import com.example.kakaohair.member.domain.MemberFixture;
-import com.example.kakaohair.member.domain.MemberRepository;
-import com.example.kakaohair.member.web.MemberResponse;
+import com.example.kakaohair.user.member.domain.Member;
+import com.example.kakaohair.user.member.domain.MemberFixture;
+import com.example.kakaohair.user.member.domain.MemberRepository;
+import com.example.kakaohair.user.member.web.MemberResponse;
+import com.example.kakaohair.user.member.web.MemberUpdateRequest;
 
 @ExtendWith(MockitoExtension.class)
 class MemberServiceTest {
@@ -41,10 +42,11 @@ class MemberServiceTest {
     void create() {
         final Member expectedMember = MemberFixture.memberWithId();
         when(memberRepository.save(any(Member.class))).thenReturn(expectedMember);
+        when(jwtGenerator.createCustomToken(anyString())).thenReturn(TokenResponse.of(anyString()));
 
-        final Long createdId = memberService.create(MemberFixture.memberWithOutId());
+        final TokenResponse tokenResponse = memberService.create(memberWithOutId());
 
-        assertThat(createdId).isEqualTo(expectedMember.getId());
+        assertThat(tokenResponse.getAccessToken()).isNotNull();
     }
 
     @DisplayName("회원의 ID로 회원을 조회한다.")
@@ -64,10 +66,9 @@ class MemberServiceTest {
         final MemberUpdateRequest updateDto = MemberFixture.updateDto();
         when(memberRepository.findById(anyLong())).thenReturn(Optional.of(MemberFixture.updatedMember()));
 
-        memberService.update(originMember.getId(), updateDto);
+        memberService.update(originMember, updateDto);
         final MemberResponse response = memberService.findByMemberId(originMember.getId());
 
-        assertThat(originMember.getName()).isNotEqualTo(response.getName());
         assertThat(updateDto.getName()).isEqualTo(response.getName());
     }
 
@@ -85,7 +86,7 @@ class MemberServiceTest {
         final TokenResponse expectedToken = TokenResponse.of(MemberFixture.socialMember().getSocialId());
         given(jwtGenerator.createCustomToken(anyString())).willReturn(expectedToken);
 
-        final TokenResponse actual = memberService.tokenFrom(MemberFixture.socialInfo());
+        final TokenResponse actual = memberService.createMemberAndToken(MemberFixture.socialInfo());
         assertThat(actual.getAccessToken()).isEqualTo(expectedToken.getAccessToken());
     }
 
@@ -97,7 +98,7 @@ class MemberServiceTest {
         final TokenResponse expectedToken = TokenResponse.of(SOCIAL_ID);
         given(jwtGenerator.createCustomToken(anyString())).willReturn(expectedToken);
 
-        final TokenResponse actual = memberService.tokenFrom(MemberFixture.socialInfo());
+        final TokenResponse actual = memberService.createMemberAndToken(MemberFixture.socialInfo());
         assertThat(actual.getAccessToken()).isEqualTo(expectedToken.getAccessToken());
     }
 }

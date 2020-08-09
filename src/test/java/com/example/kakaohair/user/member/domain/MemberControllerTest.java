@@ -1,4 +1,4 @@
-package com.example.kakaohair.member.domain;
+package com.example.kakaohair.user.member.domain;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,9 +11,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
@@ -23,19 +22,16 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import com.example.kakaohair.common.exception.ErrorCode;
 import com.example.kakaohair.common.exception.MemberNotFoundException;
-import com.example.kakaohair.common.infra.kakao.KakaoLoginService;
 import com.example.kakaohair.common.infra.kakao.LoginService;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
-import com.example.kakaohair.member.SocialInfo;
-import com.example.kakaohair.member.application.MemberService;
-import com.example.kakaohair.member.application.MemberUpdateRequest;
-import com.example.kakaohair.member.web.MemberController;
-import com.example.kakaohair.member.web.MemberCreateRequest;
-import com.example.kakaohair.member.web.MemberResponse;
+import com.example.kakaohair.user.member.SocialInfo;
+import com.example.kakaohair.user.member.application.MemberService;
+import com.example.kakaohair.user.member.web.MemberCreateRequest;
+import com.example.kakaohair.user.member.web.MemberResponse;
+import com.example.kakaohair.user.member.web.MemberUpdateRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@WebMvcTest(MemberController.class)
-@Import(KakaoLoginService.class)
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class MemberControllerTest {
     private static final String REDIRECT_URL = "https:/kauth.kakao.com/oauth/authorize?response_type=code&client_id=AAA&redirect_uri=BBB";
 
@@ -61,17 +57,18 @@ class MemberControllerTest {
     @DisplayName("회원을 생성하는 요청을 정상적으로 처리한다.")
     @Test
     void create() throws Exception {
-        final Member member = MemberFixture.memberWithId();
-        when(memberService.create(any(Member.class))).thenReturn(member.getId());
+        when(memberService.create(any(Member.class))).thenReturn(TokenResponse.of(anyString()));
+        when(memberService.findBySocialId(anyString())).thenReturn(MemberFixture.memberWithId());
 
         final MemberCreateRequest request = MemberFixture.createDto();
 
         mockMvc.perform(post("/api/members")
+            .header("Authorization", "VALID_TOKEN")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(request))
         )
-            .andExpect(status().isCreated())
-            .andExpect(header().string("Location", "/api/members/1"));
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("accessToken").isNotEmpty());
     }
 
     @DisplayName("로그인을 요청하면 소셜로그인 페이지로 리다이랙트 한다.")
@@ -97,7 +94,7 @@ class MemberControllerTest {
         when(loginService.getSocialToken(anyString())).thenReturn(tokenExample);
         final SocialInfo socialInfoExample = MemberFixture.socialInfo();
         when(loginService.getSocialInfo(tokenExample)).thenReturn(socialInfoExample);
-        when(memberService.tokenFrom(socialInfoExample)).thenReturn(TokenResponse.of("TEST"));
+        when(memberService.createMemberAndToken(socialInfoExample)).thenReturn(TokenResponse.of("TEST"));
 
         mockMvc.perform(get("/api/members/oauth2/token")
             .param("code", "TEST")
@@ -110,7 +107,7 @@ class MemberControllerTest {
     @Test
     void createBadRequest() throws Exception {
         MemberCreateRequest request = MemberFixture.createWrongDto();
-        when(memberService.create(any(Member.class))).thenReturn(MemberFixture.memberWithId().getId());
+        when(memberService.create(any(Member.class))).thenReturn(TokenResponse.of(anyString()));
         mockMvc.perform(post("/api/members")
             .contentType(MediaType.APPLICATION_JSON)
             .content(objectMapper.writeValueAsBytes(request))

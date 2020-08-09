@@ -1,10 +1,10 @@
-package com.example.kakaohair.member.domain;
+package com.example.kakaohair.user.member.domain;
 
 import java.time.LocalDateTime;
 
-import com.example.kakaohair.member.SocialInfo;
-import com.example.kakaohair.member.application.MemberUpdateRequest;
-import com.example.kakaohair.member.web.MemberCreateRequest;
+import com.example.kakaohair.user.member.SocialInfo;
+import com.example.kakaohair.user.member.web.MemberCreateRequest;
+import com.example.kakaohair.user.member.web.MemberUpdateRequest;
 
 public class MemberFixture {
     public static final String NAME = "TEST_NAME";
@@ -16,16 +16,17 @@ public class MemberFixture {
     public static MemberCreateRequest createDto() {
         return MemberCreateRequest.builder()
             .name(NAME)
+            .socialId(SOCIAL_ID)
             .build();
     }
 
     public static Member memberWithId() {
         return Member.builder()
             .id(ID)
+            .socialId(SOCIAL_ID)
             .createdAt(LocalDateTime.now().minusDays(3))
             .updatedAt(LocalDateTime.now())
             .name(NAME)
-            .memberState(MemberState.ACTIVE)
             .build();
     }
 
@@ -33,8 +34,8 @@ public class MemberFixture {
         return Member.builder()
             .createdAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now().plusDays(3))
+            .socialId(SOCIAL_ID)
             .name(NAME)
-            .memberState(MemberState.ACTIVE)
             .build();
     }
 
@@ -44,7 +45,6 @@ public class MemberFixture {
             .createdAt(LocalDateTime.now())
             .updatedAt(LocalDateTime.now().plusDays(3))
             .name(UPDATE_NAME)
-            .memberState(MemberState.ACTIVE)
             .build();
     }
 

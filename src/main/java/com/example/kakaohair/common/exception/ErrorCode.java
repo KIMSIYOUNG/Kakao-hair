@@ -10,7 +10,7 @@ import lombok.Getter;
 public enum ErrorCode {
     INVALID_REQUEST(HttpStatus.BAD_REQUEST, "Validation-001"),
 
-    TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "TOKEN-001"),
+    TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "TOKEN-001"),
 
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member-001");
 

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import com.example.kakaohair.member.SocialInfo;
+import com.example.kakaohair.user.member.SocialInfo;
 
 @Service
 public class KakaoLoginService implements LoginService {

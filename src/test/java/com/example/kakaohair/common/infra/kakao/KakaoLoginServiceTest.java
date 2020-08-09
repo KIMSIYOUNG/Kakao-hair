@@ -18,7 +18,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.reactive.function.client.WebClientException;
 import org.springframework.web.util.DefaultUriBuilderFactory;
 
-import com.example.kakaohair.member.SocialInfo;
+import com.example.kakaohair.user.member.SocialInfo;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import okhttp3.mockwebserver.Dispatcher;

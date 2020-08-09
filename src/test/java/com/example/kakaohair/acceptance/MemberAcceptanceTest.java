@@ -2,36 +2,17 @@ package com.example.kakaohair.acceptance;
 
 import static org.assertj.core.api.Assertions.*;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Rollback;
 
-import com.example.kakaohair.member.application.MemberUpdateRequest;
-import com.example.kakaohair.member.domain.MemberFixture;
-import com.example.kakaohair.member.domain.MemberState;
-import com.example.kakaohair.member.web.MemberCreateRequest;
-import com.example.kakaohair.member.web.MemberResponse;
-import io.restassured.RestAssured;
-import io.restassured.specification.RequestSpecification;
+import com.example.kakaohair.common.infra.kakao.TokenResponse;
+import com.example.kakaohair.user.member.domain.MemberFixture;
+import com.example.kakaohair.user.member.web.MemberResponse;
+import com.example.kakaohair.user.member.web.MemberUpdateRequest;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
-public class MemberAcceptanceTest {
-
-    @LocalServerPort
-    private int port;
-
-    @BeforeEach
-    void setUp() {
-        RestAssured.port = port;
-    }
-
-    private static RequestSpecification given() {
-        return RestAssured.given().log().all();
-    }
+public class MemberAcceptanceTest extends AcceptanceTest {
+    private static final String RESOURCE = "/api/members";
 
     /*
     Scenario : 회원을 관리한다.
@@ -49,35 +30,47 @@ public class MemberAcceptanceTest {
         then: 기존 회원이 삭제되었다.
      */
     @Test
-    @Rollback(false)
     void manageMember() {
-        String resource = fetchCreateMember();
-        final MemberResponse findMember = fetchMember(resource);
-        String updatedResource = fetchUpdate(resource);
-        final MemberResponse updatedMember = fetchMember(updatedResource);
+        TokenResponse token = createMemberAndRetrieveToken();
+        MemberResponse findMember = fetchMember(token);
+
+        fetchUpdate(token);
+        MemberResponse updatedMember = fetchMember(token);
         assertThat(findMember).isEqualToIgnoringGivenFields(updatedMember, "name");
-        fetchDelete(resource);
-        final MemberResponse deletedMember = fetchMember(updatedResource);
-        assertThat(deletedMember.getMemberState()).isEqualTo(MemberState.DELETED);
+
+        fetchDelete(token);
+        fetchNotExistMember(token);
     }
 
-    private void fetchDelete(final String resource) {
+    private void fetchNotExistMember(TokenResponse token) {
         given()
+            .auth().oauth2(token.getAccessToken())
             .when()
-            .delete(resource)
+            .get(RESOURCE)
+            .then()
+            .log().all()
+            .statusCode(HttpStatus.NOT_FOUND.value());
+    }
+
+    private void fetchDelete(TokenResponse token) {
+        given()
+            .auth().oauth2(token.getAccessToken())
+            .when()
+            .delete(RESOURCE)
             .then()
             .log().all()
             .statusCode(HttpStatus.NO_CONTENT.value());
     }
 
-    private String fetchUpdate(final String resource) {
+    private String fetchUpdate(TokenResponse token) {
         MemberUpdateRequest request = MemberFixture.updateDto();
 
         return given()
+            .auth().oauth2(token.getAccessToken())
             .contentType(MediaType.APPLICATION_JSON_VALUE)
             .body(request)
             .when()
-            .put(resource)
+            .put(RESOURCE)
             .then()
             .log().all()
             .statusCode(HttpStatus.OK.value())
@@ -85,30 +78,15 @@ public class MemberAcceptanceTest {
             .header("Location");
     }
 
-    private MemberResponse fetchMember(final String resource) {
+    private MemberResponse fetchMember(TokenResponse token) {
         return given()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
+            .auth().oauth2(token.getAccessToken())
             .when()
-            .get(resource)
+            .get(RESOURCE)
             .then()
             .log().all()
             .statusCode(HttpStatus.OK.value())
             .extract()
             .as(MemberResponse.class);
-    }
-
-    private String fetchCreateMember() {
-        MemberCreateRequest request = MemberFixture.createDto();
-
-        return given()
-            .contentType(MediaType.APPLICATION_JSON_VALUE)
-            .body(request)
-            .when()
-            .post("/api/members")
-            .then()
-            .log().all()
-            .statusCode(HttpStatus.CREATED.value())
-            .extract()
-            .header("Location");
     }
 }

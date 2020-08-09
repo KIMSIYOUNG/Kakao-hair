@@ -1,4 +1,4 @@
-package com.example.kakaohair.member;
+package com.example.kakaohair.user.member;
 
 import java.beans.ConstructorProperties;
 

@@ -1,4 +1,4 @@
-package com.example.kakaohair.member.application;
+package com.example.kakaohair.user.member.application;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -6,39 +6,37 @@ import org.springframework.transaction.annotation.Transactional;
 import com.example.kakaohair.common.JwtGenerator;
 import com.example.kakaohair.common.exception.MemberNotFoundException;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
-import com.example.kakaohair.member.SocialInfo;
-import com.example.kakaohair.member.domain.Member;
-import com.example.kakaohair.member.domain.MemberRepository;
-import com.example.kakaohair.member.domain.MemberState;
-import com.example.kakaohair.member.web.MemberResponse;
-import lombok.AllArgsConstructor;
+import com.example.kakaohair.user.member.SocialInfo;
+import com.example.kakaohair.user.member.domain.Member;
+import com.example.kakaohair.user.member.domain.MemberRepository;
+import com.example.kakaohair.user.member.web.MemberResponse;
+import com.example.kakaohair.user.member.web.MemberUpdateRequest;
+import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
+@RequiredArgsConstructor
 @Transactional
 @Service
 public class MemberService {
     private final MemberRepository memberRepository;
     private final JwtGenerator jwtGenerator;
 
-    public TokenResponse tokenFrom(SocialInfo socialInfo) {
+    public TokenResponse createMemberAndToken(SocialInfo socialInfo) {
         final Member member = memberRepository.findBySocialId(socialInfo.getId())
             .orElseGet(() -> createMember(Member.builder()
                 .name(socialInfo.getName())
                 .socialId(socialInfo.getId())
-                .memberState(MemberState.ACTIVE)
                 .build()));
 
         return jwtGenerator.createCustomToken(member.getSocialId());
     }
 
-    private Member createMember(Member member) {
-        return memberRepository.save(member);
+    public TokenResponse create(Member member) {
+        Member savedMember = memberRepository.save(member);
+        return jwtGenerator.createCustomToken(savedMember.getSocialId());
     }
 
-    public Long create(Member member) {
-        Member savedMember = memberRepository.save(member);
-
-        return savedMember.getId();
+    private Member createMember(Member member) {
+        return memberRepository.save(member);
     }
 
     @Transactional(readOnly = true)
@@ -48,8 +46,13 @@ public class MemberService {
         return MemberResponse.from(member);
     }
 
-    public void update(final Long id, MemberUpdateRequest request) {
-        final Member member = find(id);
+    @Transactional(readOnly = true)
+    public Member findBySocialId(String socialId) {
+        return memberRepository.findBySocialId(socialId)
+            .orElseThrow(() -> new MemberNotFoundException(socialId));
+    }
+
+    public void update(Member member, MemberUpdateRequest request) {
         member.changeInfo(request);
     }
 

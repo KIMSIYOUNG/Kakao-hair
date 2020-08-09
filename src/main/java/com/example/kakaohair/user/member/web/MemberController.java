@@ -1,4 +1,4 @@
-package com.example.kakaohair.member.web;
+package com.example.kakaohair.user.member.web;
 
 import java.io.IOException;
 import java.net.URI;
@@ -9,7 +9,6 @@ import javax.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,9 +18,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.kakaohair.common.infra.kakao.LoginService;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
-import com.example.kakaohair.member.SocialInfo;
-import com.example.kakaohair.member.application.MemberService;
-import com.example.kakaohair.member.application.MemberUpdateRequest;
+import com.example.kakaohair.user.member.SocialInfo;
+import com.example.kakaohair.user.member.application.MemberService;
+import com.example.kakaohair.user.member.domain.Member;
+import com.example.kakaohair.user.web.LoginMember;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -43,37 +43,36 @@ public class MemberController {
     public ResponseEntity<TokenResponse> createToken(@RequestParam String code) {
         final TokenResponse kakaoToken = loginService.getSocialToken(code);
         final SocialInfo loginInfo = loginService.getSocialInfo(kakaoToken);
-        final TokenResponse customToken = memberService.tokenFrom(loginInfo);
+        final TokenResponse customToken = memberService.createMemberAndToken(loginInfo);
 
         return ResponseEntity.ok(customToken);
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody MemberCreateRequest request) {
-        Long id = memberService.create(request.toMember());
+    public ResponseEntity<TokenResponse> create(@Valid @RequestBody MemberCreateRequest request) {
+        final TokenResponse token = memberService.create(request.toMember());
 
-        return ResponseEntity.created(URI.create("/api/members/" + id)).build();
+        return ResponseEntity.ok(token);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<MemberResponse> findByMemberId(@PathVariable Long id) {
-        MemberResponse response = memberService.findByMemberId(id);
-
-        return ResponseEntity.ok(response);
+    @GetMapping
+    public ResponseEntity<MemberResponse> findByMemberId(@LoginMember Member member) {
+        return ResponseEntity.ok(MemberResponse.from(member));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Void> updateByMemberId(@PathVariable Long id, @RequestBody @Valid MemberUpdateRequest request) {
-        memberService.update(id, request);
+    @PutMapping
+    public ResponseEntity<Void> updateByMemberId(@LoginMember Member member,
+        @RequestBody @Valid MemberUpdateRequest request) {
+        memberService.update(member, request);
 
         return ResponseEntity.ok()
-            .header("Location", "/api/members/" + id)
+            .header("Location", "/api/members/" + member.getId())
             .build();
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteByMemberId(@PathVariable Long id) {
-        memberService.delete(id);
+    @DeleteMapping
+    public ResponseEntity<Void> deleteByMemberId(@LoginMember Member member) {
+        memberService.delete(member.getId());
 
         return ResponseEntity.noContent().build();
     }
