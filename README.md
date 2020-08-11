@@ -3,7 +3,18 @@
 ### 클래스 다이어그램
 ![Kakao-hair](https://user-images.githubusercontent.com/49060374/88496307-b17f4080-cff7-11ea-9f7d-71061e1a2ce9.png)
 
-### 개발 과정
+## 프로세스
+- code (자세한 프로세스는 [여기](https://velog.io/@kyle/Acceptance-Test-%EA%B0%9C%EB%B0%9C-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4)서 볼 수 있습니다.)
+    - acceptance test(통합 테스트)
+    - controller test(문서화 및 통신 테스트)
+    - service test(로직 테스트)
+    - domain test(단위 테스트)
+    - repository test(Custom query 테스트)
+- documentation (자세한 프로세스는 여기서 볼 수 있습니다.)
+    - controller test
+    - spring rest docs 
+
+### 고민 포인트
 - 이슈 관리 및 프로젝트 관리
 - 도메인 설계
     - 객체와 데이터 베이스 관계
