@@ -6,7 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
-import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.example.kakaohair.common.JwtGenerator;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
-public class AuthorizationInterceptor implements HandlerInterceptor {
+public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
     private final AuthorizationExtractor extractor;
     private final JwtGenerator jwtGenerator;
 
@@ -35,6 +35,6 @@ public class AuthorizationInterceptor implements HandlerInterceptor {
     }
 
     private boolean isExcludePattern(HttpServletRequest request) {
-        return HttpMethod.POST.matches(request.getMethod()) && request.getServletPath().equalsIgnoreCase("/api/members");
+        return (HttpMethod.POST.matches(request.getMethod()) && request.getServletPath().equalsIgnoreCase("/api/members"));
     }
 }

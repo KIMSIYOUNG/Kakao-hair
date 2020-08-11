@@ -8,14 +8,14 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import com.example.kakaohair.user.web.AuthorizationInterceptor;
-import com.example.kakaohair.user.web.UserArgumentResolver;
+import com.example.kakaohair.user.web.LoginMemberArgumentResolver;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
     private final AuthorizationInterceptor authorizationInterceptor;
-    private final UserArgumentResolver userArgumentResolver;
+    private final LoginMemberArgumentResolver loginMemberArgumentResolver;
 
     @Override
     public void addInterceptors(final InterceptorRegistry registry) {
@@ -24,6 +24,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addArgumentResolvers(final List<HandlerMethodArgumentResolver> resolvers) {
-        resolvers.add(userArgumentResolver);
+        resolvers.add(loginMemberArgumentResolver);
     }
 }

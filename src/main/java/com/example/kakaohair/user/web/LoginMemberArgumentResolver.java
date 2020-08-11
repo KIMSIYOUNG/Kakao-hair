@@ -13,11 +13,12 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 import com.example.kakaohair.common.exception.ErrorCode;
 import com.example.kakaohair.common.exception.TokenInvalidException;
 import com.example.kakaohair.user.member.application.MemberService;
+import com.example.kakaohair.user.member.domain.Member;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
-public class UserArgumentResolver implements HandlerMethodArgumentResolver {
+public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
     private final MemberService memberService;
 
     @Override
@@ -26,7 +27,7 @@ public class UserArgumentResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+    public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
         String socialId = (String)webRequest.getAttribute("socialId", RequestAttributes.SCOPE_REQUEST);
 

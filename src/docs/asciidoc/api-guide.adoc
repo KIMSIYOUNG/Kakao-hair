@@ -1,0 +1,146 @@
+ifndef::snippets[]
+:snippets: ../../../build/generated-snippets
+endif::[]
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 4
+:sectlinks:
+:operation-http-request-title: 요청 예시
+:operation-http-response-title: 응답 예시
+
+
+[[title]]
+= 카카오 헤어 Api Version 1.0
+
+[[overview]]
+== Overview
+
+이 문서는 카카오 헤어샵 Api 문서입니다. 문제가 있으면 https://github.com/KIMSIYOUNG/Kakao-hair[여기]로 알려주시면 감사하겠습니다.
+[[http-verb]]
+== HTTP Verbs
+
+카카오 헤어 API에서 사용하는 HTTP Verbs는 가능한 범위 내 표준 HTTP와 REST 규약을 따릅니다.
+
+|===
+| Method | Usage
+
+| `GET`
+| 기존의 리소스를 가져오는 경우
+
+| `POST`
+| 새로운 리소스를 만드는 경우
+
+| `PUT`
+| 기존의 리소스를 수정하는 경우
+
+| `PATCH`
+| 기존 리소스의 일부를 수정하는 경우
+
+| `DELETE`
+| 기존 리소스를 삭제하는 경
+|===
+
+[[http-status-code]]
+== HTTP Status Code
+
+Peloton API에서 사용하는 HTTP Status Code는 가능한 범위 내 표준 HTTP와 REST 규약을 따릅니다.
+
+|===
+| Status Code | Usage
+
+| `200 OK`
+| 요청을 성공적으로 처리함
+
+| `201 Created`
+| 새 리소스를 성공적으로 생성함. 응답의 `Location` 헤더에 해당 리소스의 URI가 담겨있다.
+
+| `204 No Content`
+| 기존 리소스를 성공적으로 수정함.
+
+| `400 Bad Request`
+| 잘못된 요청을 보낸 경우. 응답 본문에 더 오류에 대한 정보가 담겨있다.
+
+| `401 UnAuthorized`
+| 인증을 요구하는 요청에 인증을 포함하지 않은 경우.
+
+| `403 Forbidden`
+| 해당 리소스에 접근할 권한이 없는 경우.
+
+| `404 Not Found`
+| 요청한 리소스가 없음.
+
+| `500 Internal Sever Error`
+| 예상치 못한 내부 서버 에러.
+|===
+
+[[authentication]]
+== Authentication
+
+카카오 헤어 API v1에서의 인증은 OAuth2 Token을 통해서 이루어집니다. Authentication이 없는 경우 `401 UnAuthorized` 를 반환합니다.
+//todo 403 error 내용 추가해야함
+
+[[authentication-oauth2-token]]
+=== OAuth2 token (sent in a header)
+
+[[authentication-oauth2-token-success]]
+==== Authentication Success
+[source,bash]
+----
+$ curl -i -H "Authorization: Bearer VALID-TOKEN" http://localhost:8080
+HTTP/1.1 200
+Server: nginx/1.19.1
+Date: Wed, 05 Aug 2020 06:27:05 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+----
+
+[[authentication-oauth2-token-fail]]
+==== Authentication Fail
+
+[source,bash]
+----
+$ curl -i https://peloton.ga/api
+HTTP/1.1 401
+Server: nginx/1.19.1
+Date: Wed, 05 Aug 2020 06:26:14 GMT
+Content-Type: application/json
+Transfer-Encoding: chunked
+Connection: keep-alive
+----
+
+[[resources]]
+= 카카오 헤어 API
+
+[[resources-member]]
+== 회원 API
+
+[[resources-member-create]]
+=== 회원 생성
+operation::member/create-member[snippets='http-request,http-response,request-fields,response-fields']
+
+[[resources-member-create-fail]]
+=== 회원 생성 실패
+operation::member/create-fail[snippets='http-request,http-response,request-headers,request-fields,response-fields']
+
+[[resources-member-redirect-login]]
+=== 회원 생성을 위한 redirect
+operation::member/redirect-login[snippets='http-request,http-response']
+
+[[resources-member-create-social-token]]
+=== 카카오 로그인을 통한 토큰 발급
+operation::member/create-social-token[snippets='http-request,http-response,request-parameters,response-fields']
+
+[[resources-member-find-member]]
+=== 내 정보 조회
+operation::member/find-member[snippets='http-request,http-response,request-headers,response-fields']
+
+[[resources-member-update-name]]
+=== 이름 수정하기
+operation::member/update-name[snippets='http-request,http-response,request-headers,response-headers']
+
+[[resources-member-delete]]
+=== 회원 탈퇴
+operation::member/delete-member[snippets='http-request,http-response,request-headers']
