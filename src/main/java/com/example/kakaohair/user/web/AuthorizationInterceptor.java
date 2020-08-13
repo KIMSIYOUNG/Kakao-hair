@@ -28,7 +28,7 @@ public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
         }
 
         TokenResponse tokenResponse = extractor.extract(request);
-        final String socialId = jwtGenerator.getSubject(tokenResponse.getAccessToken());
+        String socialId = jwtGenerator.getSubject(tokenResponse.getAccessToken());
         request.setAttribute("socialId", socialId);
 
         return true;
