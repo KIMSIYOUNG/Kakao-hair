@@ -4,7 +4,7 @@
 ![Kakao-hair](https://user-images.githubusercontent.com/49060374/88496307-b17f4080-cff7-11ea-9f7d-71061e1a2ce9.png)
 
 ## 프로세스
-- code (자세한 프로세스는 [여기](https://velog.io/@kyle/Acceptance-Test-%EA%B0%9C%EB%B0%9C-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4)서 볼 수 있습니다.)
+- code ([자세한 프로세스는 클릭하시면 볼 수 있습니다.](https://velog.io/@kyle/Acceptance-Test-%EA%B0%9C%EB%B0%9C-%ED%94%84%EB%A1%9C%EC%84%B8%EC%8A%A4))
     - acceptance test(통합 테스트)
     - controller test(문서화 및 통신 테스트)
     - service test(로직 테스트)
@@ -15,7 +15,7 @@
     - spring rest docs 
 
 ### 고민 포인트
-- 이슈 관리 및 프로젝트 관리
+- [이슈 관리 및 프로젝트 관리](https://velog.io/@kyle/%EC%9D%B4%EC%8A%88-%EA%B4%80%EB%A6%AC-%EB%B0%8F-%ED%95%A0%EC%9D%BC-%EA%B4%80%EB%A6%AC)
 - 도메인 설계
     - 객체와 데이터 베이스 관계
 - 카카오 로그인 및 관리
@@ -25,7 +25,7 @@
     - 회원과 헤어샵 직원
 - 각 도메인 별(기본적인) CRUD 및 테스트 구조
     - Dto는 어디 레이어 까지 가져갈 것인가?
-- API 문서화
+- [API 문서화 - 클릭](https://velog.io/@kyle/%EC%84%9C%EB%B2%84-API-%EB%AC%B8%EC%84%9C%ED%99%94Spring-Rest-docs)
     - Spring rest docs vs Swagger
     - 문서화는 어떤 형태로 하는 것이 사용하기 좋을까?
 - 배포
