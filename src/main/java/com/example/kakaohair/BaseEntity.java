@@ -22,7 +22,6 @@ import lombok.NoArgsConstructor;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class BaseEntity {
-
     @Id
     @GeneratedValue
     protected Long id;
