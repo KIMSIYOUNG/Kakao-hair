@@ -2,17 +2,17 @@ package com.example.kakaohair.user.member.domain;
 
 import java.time.LocalDateTime;
 
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
-import javax.validation.constraints.NotBlank;
 
 import com.example.kakaohair.BaseEntity;
-import com.example.kakaohair.user.member.web.MemberUpdateRequest;
+import com.example.kakaohair.user.member.domain.hairinfo.HairInfo;
+import com.example.kakaohair.user.member.domain.memberinfo.MemberInfo;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
 
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -20,21 +20,16 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Member extends BaseEntity {
 
-    @NotBlank
-    private String name;
+    @Embedded
+    private MemberInfo memberInfo;
 
-    private String socialId;
+    @Embedded
+    private HairInfo hairInfo;
 
     @Builder(toBuilder = true)
-    Member(Long id, String socialId, LocalDateTime createdAt, LocalDateTime updatedAt, String name) {
+    Member(Long id, MemberInfo memberInfo, HairInfo hairInfo, LocalDateTime createdAt, LocalDateTime updatedAt) {
         super(id, createdAt, updatedAt);
-        this.socialId = socialId;
-        this.name = name;
-    }
-
-    public void changeInfo(MemberUpdateRequest request) {
-        if(request.getName() != null) {
-            this.name = request.getName();
-        }
+        this.memberInfo = memberInfo;
+        this.hairInfo = hairInfo;
     }
 }

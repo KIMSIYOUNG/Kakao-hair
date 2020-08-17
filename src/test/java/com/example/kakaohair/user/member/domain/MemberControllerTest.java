@@ -160,7 +160,7 @@ class MemberControllerTest {
         )
             .andExpect(status().isOk())
             .andExpect(jsonPath("id").value(expectedMember.getId()))
-            .andExpect(jsonPath("name").value(expectedMember.getName()))
+            .andExpect(jsonPath("name").value(expectedMember.getMemberInfo().getName()))
             .andDo(MemberDocumentation.findMyInfo());
     }
 

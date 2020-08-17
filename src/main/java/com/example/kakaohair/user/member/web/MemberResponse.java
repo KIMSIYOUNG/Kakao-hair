@@ -19,8 +19,8 @@ public class MemberResponse {
     public static MemberResponse from(Member member) {
         return MemberResponse.builder()
             .id(member.getId())
-            .name(member.getName())
-            .socialId(member.getSocialId())
+            .name(member.getMemberInfo().getName())
+            .socialId(member.getMemberInfo().getName())
             .build();
     }
 }

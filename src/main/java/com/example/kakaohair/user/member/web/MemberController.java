@@ -10,7 +10,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -58,16 +57,6 @@ public class MemberController {
     @GetMapping
     public ResponseEntity<MemberResponse> findByMemberId(@LoginMember Member member) {
         return ResponseEntity.ok(MemberResponse.from(member));
-    }
-
-    @PutMapping
-    public ResponseEntity<Void> updateByMemberId(@LoginMember Member member,
-        @RequestBody @Valid MemberUpdateRequest request) {
-        memberService.update(member, request);
-
-        return ResponseEntity.ok()
-            .header("Location", "/api/members/" + member.getId())
-            .build();
     }
 
     @DeleteMapping

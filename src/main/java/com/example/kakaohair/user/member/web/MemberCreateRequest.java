@@ -1,8 +1,8 @@
 package com.example.kakaohair.user.member.web;
 
-import javax.validation.constraints.NotBlank;
-
 import com.example.kakaohair.user.member.domain.Member;
+import com.example.kakaohair.user.member.domain.hairinfo.HairInfo;
+import com.example.kakaohair.user.member.domain.memberinfo.MemberInfo;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,15 +13,14 @@ import lombok.NoArgsConstructor;
 @Builder
 @Getter
 public class MemberCreateRequest {
-    @NotBlank
-    private String name;
+    private MemberInfo memberInfo;
 
-    private String socialId;
+    private HairInfo hairInfo;
 
     public Member toMember() {
         return Member.builder()
-            .socialId(this.socialId)
-            .name(this.name)
+            .memberInfo(memberInfo)
+            .hairInfo(hairInfo)
             .build();
     }
 }

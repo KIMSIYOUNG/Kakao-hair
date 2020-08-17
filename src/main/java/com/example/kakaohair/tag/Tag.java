@@ -6,7 +6,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.example.kakaohair.BaseEntity;
-import com.example.kakaohair.article.Product;
+import com.example.kakaohair.product.Product;
 import com.example.kakaohair.shop.Shop;
 import lombok.AccessLevel;
 import lombok.Getter;

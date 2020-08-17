@@ -9,8 +9,9 @@ import com.example.kakaohair.common.infra.kakao.TokenResponse;
 import com.example.kakaohair.user.member.SocialInfo;
 import com.example.kakaohair.user.member.domain.Member;
 import com.example.kakaohair.user.member.domain.MemberRepository;
+import com.example.kakaohair.user.member.domain.hairinfo.HairInfo;
+import com.example.kakaohair.user.member.domain.memberinfo.MemberInfo;
 import com.example.kakaohair.user.member.web.MemberResponse;
-import com.example.kakaohair.user.member.web.MemberUpdateRequest;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -23,20 +24,20 @@ public class MemberService {
     public TokenResponse createMemberAndToken(SocialInfo socialInfo) {
         final Member member = memberRepository.findBySocialId(socialInfo.getId())
             .orElseGet(() -> createMember(Member.builder()
-                .name(socialInfo.getName())
-                .socialId(socialInfo.getId())
+                .memberInfo(MemberInfo.of(socialInfo))
+                .hairInfo(HairInfo.init())
                 .build()));
 
-        return jwtGenerator.createCustomToken(member.getSocialId());
-    }
-
-    public TokenResponse create(Member member) {
-        Member savedMember = memberRepository.save(member);
-        return jwtGenerator.createCustomToken(savedMember.getSocialId());
+        return jwtGenerator.createCustomToken(member.getMemberInfo().getSocialId());
     }
 
     private Member createMember(Member member) {
         return memberRepository.save(member);
+    }
+
+    public TokenResponse create(Member member) {
+        Member savedMember = memberRepository.save(member);
+        return jwtGenerator.createCustomToken(savedMember.getMemberInfo().getSocialId());
     }
 
     @Transactional(readOnly = true)
@@ -50,10 +51,6 @@ public class MemberService {
     public Member findBySocialId(String socialId) {
         return memberRepository.findBySocialId(socialId)
             .orElseThrow(() -> new MemberNotFoundException(socialId));
-    }
-
-    public void update(Member member, MemberUpdateRequest request) {
-        member.changeInfo(request);
     }
 
     public void delete(final Long id) {

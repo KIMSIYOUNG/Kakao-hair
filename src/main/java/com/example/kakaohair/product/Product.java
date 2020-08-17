@@ -1,8 +1,7 @@
-package com.example.kakaohair.article;
+package com.example.kakaohair.product;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.example.kakaohair.BaseEntity;

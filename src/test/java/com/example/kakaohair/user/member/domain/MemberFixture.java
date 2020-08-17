@@ -1,8 +1,8 @@
 package com.example.kakaohair.user.member.domain;
 
-import java.time.LocalDateTime;
-
 import com.example.kakaohair.user.member.SocialInfo;
+import com.example.kakaohair.user.member.domain.hairinfo.HairInfo;
+import com.example.kakaohair.user.member.domain.memberinfo.MemberInfo;
 import com.example.kakaohair.user.member.web.MemberCreateRequest;
 import com.example.kakaohair.user.member.web.MemberUpdateRequest;
 
@@ -13,38 +13,33 @@ public class MemberFixture {
     public static final long ID = 1L;
     public static final String SOCIAL_ID = "KAKAO-3214";
 
+    private static MemberInfo createMemberInfo() {
+        return MemberInfo.of(NAME, SOCIAL_ID, EMAIL, null, null, null, null);
+    }
+
+    private static HairInfo createHairInfo() {
+        return HairInfo.init();
+    }
+
     public static MemberCreateRequest createDto() {
         return MemberCreateRequest.builder()
-            .name(NAME)
-            .socialId(SOCIAL_ID)
+            .memberInfo(createMemberInfo())
+            .hairInfo(createHairInfo())
             .build();
     }
 
     public static Member memberWithId() {
         return Member.builder()
             .id(ID)
-            .socialId(SOCIAL_ID)
-            .createdAt(LocalDateTime.now().minusDays(3))
-            .updatedAt(LocalDateTime.now())
-            .name(NAME)
+            .memberInfo(createMemberInfo())
+            .hairInfo(createHairInfo())
             .build();
     }
 
     public static Member memberWithOutId() {
         return Member.builder()
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now().plusDays(3))
-            .socialId(SOCIAL_ID)
-            .name(NAME)
-            .build();
-    }
-
-    public static Member updatedMember() {
-        return Member.builder()
-            .id(ID)
-            .createdAt(LocalDateTime.now())
-            .updatedAt(LocalDateTime.now().plusDays(3))
-            .name(UPDATE_NAME)
+            .memberInfo(createMemberInfo())
+            .hairInfo(createHairInfo())
             .build();
     }
 
@@ -55,16 +50,6 @@ public class MemberFixture {
     public static MemberUpdateRequest updateDto() {
         return MemberUpdateRequest.builder()
             .name(UPDATE_NAME)
-            .build();
-    }
-
-    public static MemberUpdateRequest updateWrongDto() {
-        return MemberUpdateRequest.builder().build();
-    }
-
-    public static Member socialMember() {
-        return memberWithId().toBuilder()
-            .socialId(SOCIAL_ID)
             .build();
     }
 

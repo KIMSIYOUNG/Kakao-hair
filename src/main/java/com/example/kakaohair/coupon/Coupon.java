@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 
 import com.example.kakaohair.BaseEntity;
-import com.example.kakaohair.article.Product;
+import com.example.kakaohair.product.Product;
 import com.example.kakaohair.user.member.domain.Member;
 import lombok.AccessLevel;
 import lombok.Getter;
