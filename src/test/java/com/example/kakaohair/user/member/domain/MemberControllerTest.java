@@ -38,7 +38,6 @@ import com.example.kakaohair.user.member.SocialInfo;
 import com.example.kakaohair.user.member.application.MemberService;
 import com.example.kakaohair.user.member.web.MemberCreateRequest;
 import com.example.kakaohair.user.member.web.MemberResponse;
-import com.example.kakaohair.user.member.web.MemberUpdateRequest;
 import com.example.kakaohair.user.web.AuthorizationInterceptor;
 import com.example.kakaohair.user.web.LoginMemberArgumentResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -162,22 +161,6 @@ class MemberControllerTest {
             .andExpect(jsonPath("id").value(expectedMember.getId()))
             .andExpect(jsonPath("name").value(expectedMember.getMemberInfo().getName()))
             .andDo(MemberDocumentation.findMyInfo());
-    }
-
-    @DisplayName("회원의 이름을 수정하는 요청을 정상 처리한다.")
-    @Test
-    void updateName() throws Exception {
-        when(authorizationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
-        final MemberUpdateRequest request = MemberFixture.updateDto();
-
-        mockMvc.perform(put("/api/members")
-            .header(HttpHeaders.AUTHORIZATION, "TEST_TOKEN")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(objectMapper.writeValueAsBytes(request))
-        )
-            .andExpect(status().isOk())
-            .andExpect(header().exists("Location"))
-            .andDo(MemberDocumentation.updateName());
     }
 
     @DisplayName("회원 탈퇴 한다.")

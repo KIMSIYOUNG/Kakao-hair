@@ -1,7 +1,5 @@
 package com.example.kakaohair.acceptance;
 
-import static org.assertj.core.api.Assertions.*;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -32,12 +30,7 @@ public class MemberAcceptanceTest extends AcceptanceTest {
     @Test
     void manageMember() {
         TokenResponse token = createMemberAndRetrieveToken();
-        MemberResponse findMember = fetchMember(token);
-
-        fetchUpdate(token);
-        MemberResponse updatedMember = fetchMember(token);
-        assertThat(findMember).isEqualToIgnoringGivenFields(updatedMember, "name");
-
+        fetchMember(token);
         fetchDelete(token);
         fetchNotExistMember(token);
     }

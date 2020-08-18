@@ -1,7 +1,10 @@
 package com.example.kakaohair.user.member.domain;
 
+import java.time.LocalDateTime;
+
 import com.example.kakaohair.user.member.SocialInfo;
 import com.example.kakaohair.user.member.domain.hairinfo.HairInfo;
+import com.example.kakaohair.user.member.domain.memberinfo.Gender;
 import com.example.kakaohair.user.member.domain.memberinfo.MemberInfo;
 import com.example.kakaohair.user.member.web.MemberCreateRequest;
 import com.example.kakaohair.user.member.web.MemberUpdateRequest;
@@ -10,11 +13,15 @@ public class MemberFixture {
     public static final String NAME = "TEST_NAME";
     public static final String EMAIL = "TEST_NAME@TEST_EMAIL";
     public static final String UPDATE_NAME = "UPDATED_NAME";
+    public static final String PROFILE = "TEST_PROFILE";
+    public static final String PHONE = "TEST_PHONE";
+    public static final Gender GENDER = Gender.FEMALE;
+    public static final LocalDateTime BIRTHDAY = LocalDateTime.now();
     public static final long ID = 1L;
     public static final String SOCIAL_ID = "KAKAO-3214";
 
     private static MemberInfo createMemberInfo() {
-        return MemberInfo.of(NAME, SOCIAL_ID, EMAIL, null, null, null, null);
+        return MemberInfo.of(NAME, SOCIAL_ID, EMAIL, PROFILE, PHONE, GENDER, BIRTHDAY);
     }
 
     private static HairInfo createHairInfo() {

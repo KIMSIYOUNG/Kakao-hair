@@ -55,7 +55,7 @@ public class MemberController {
     }
 
     @GetMapping
-    public ResponseEntity<MemberResponse> findByMemberId(@LoginMember Member member) {
+    public ResponseEntity<MemberResponse> findMember(@LoginMember Member member) {
         return ResponseEntity.ok(MemberResponse.from(member));
     }
 

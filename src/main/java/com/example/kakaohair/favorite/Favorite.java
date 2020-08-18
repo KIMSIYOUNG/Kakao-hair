@@ -1,4 +1,4 @@
-package com.example.kakaohair.like;
+package com.example.kakaohair.favorite;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Entity
 public class Favorite extends BaseEntity {
-
     @ManyToOne(fetch = FetchType.LAZY)
     private Designer designer;
 }
