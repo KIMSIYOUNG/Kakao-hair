@@ -7,7 +7,7 @@ import javax.persistence.ManyToOne;
 
 import com.example.kakaohair.BaseEntity;
 import com.example.kakaohair.product.Product;
-import com.example.kakaohair.shop.Shop;
+import com.example.kakaohair.shop.domain.Shop;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
