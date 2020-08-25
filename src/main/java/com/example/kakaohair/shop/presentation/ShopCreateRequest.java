@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import com.example.kakaohair.shop.domain.BusinessHours;
 import com.example.kakaohair.shop.domain.Photo;
 import com.example.kakaohair.shop.domain.Shop;
-import com.example.kakaohair.user.owner.Owner;
+import com.example.kakaohair.user.owner.domain.Owner;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

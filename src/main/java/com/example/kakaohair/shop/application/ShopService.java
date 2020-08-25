@@ -12,7 +12,7 @@ import com.example.kakaohair.shop.domain.Shop;
 import com.example.kakaohair.shop.domain.ShopRepository;
 import com.example.kakaohair.shop.presentation.ShopCreateRequest;
 import com.example.kakaohair.shop.presentation.ShopResponse;
-import com.example.kakaohair.user.owner.Owner;
+import com.example.kakaohair.user.owner.domain.Owner;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

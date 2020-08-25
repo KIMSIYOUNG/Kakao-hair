@@ -12,7 +12,7 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.example.kakaohair.common.exception.ErrorCode;
 import com.example.kakaohair.common.exception.invalid.TokenInvalidException;
-import com.example.kakaohair.user.owner.Owner;
+import com.example.kakaohair.user.owner.domain.Owner;
 
 @Component
 public class OwnerArgumentResolver implements HandlerMethodArgumentResolver {

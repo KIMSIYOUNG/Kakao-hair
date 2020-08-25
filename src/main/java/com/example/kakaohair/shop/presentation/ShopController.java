@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.kakaohair.shop.application.ShopService;
-import com.example.kakaohair.user.owner.Owner;
+import com.example.kakaohair.user.owner.domain.Owner;
 import com.example.kakaohair.user.web.ShopOwner;
 import lombok.RequiredArgsConstructor;
 

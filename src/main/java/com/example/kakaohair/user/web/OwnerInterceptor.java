@@ -11,8 +11,8 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.example.kakaohair.common.JwtGenerator;
 import com.example.kakaohair.common.exception.invalid.RequestInvalidException;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
-import com.example.kakaohair.user.owner.Owner;
-import com.example.kakaohair.user.owner.OwnerService;
+import com.example.kakaohair.user.owner.domain.Owner;
+import com.example.kakaohair.user.owner.application.OwnerService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class OwnerInterceptor extends HandlerInterceptorAdapter {
         final String ownerId = jwtGenerator.getSubject(tokenResponse.getAccessToken());
 
         try {
-            Owner owner = ownerService.retrieveOwnerById(Long.parseLong(ownerId));
+            Owner owner = ownerService.retrieveById(Long.parseLong(ownerId));
             request.setAttribute("owner", owner);
         } catch (NumberFormatException e) {
             throw new RequestInvalidException(ownerId);

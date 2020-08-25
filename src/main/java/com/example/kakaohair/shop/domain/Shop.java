@@ -14,7 +14,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import com.example.kakaohair.BaseEntity;
-import com.example.kakaohair.user.owner.Owner;
+import com.example.kakaohair.user.owner.domain.Owner;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;

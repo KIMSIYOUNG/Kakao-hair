@@ -1,4 +1,4 @@
-package com.example.kakaohair.user.owner;
+package com.example.kakaohair.user.owner.domain;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
