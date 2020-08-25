@@ -12,7 +12,11 @@ public enum ErrorCode {
 
     TOKEN_INVALID(HttpStatus.UNAUTHORIZED, "TOKEN-001"),
 
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member-001");
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND, "Member-001"),
+
+    OWNER_NOT_FOUND(HttpStatus.NOT_FOUND, "OWNER-001"),
+
+    SHOP_NOT_FOUND(HttpStatus.NOT_FOUND, "Shop-001");
 
     private final HttpStatus status;
     private final String code;

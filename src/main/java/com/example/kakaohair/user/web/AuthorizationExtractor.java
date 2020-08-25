@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Component;
 
 import com.example.kakaohair.common.exception.ErrorCode;
-import com.example.kakaohair.common.exception.TokenInvalidException;
+import com.example.kakaohair.common.exception.invalid.TokenInvalidException;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
 
 @Component

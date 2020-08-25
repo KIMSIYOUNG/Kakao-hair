@@ -38,7 +38,7 @@ import com.example.kakaohair.user.member.SocialInfo;
 import com.example.kakaohair.user.member.application.MemberService;
 import com.example.kakaohair.user.member.web.MemberCreateRequest;
 import com.example.kakaohair.user.member.web.MemberResponse;
-import com.example.kakaohair.user.web.AuthorizationInterceptor;
+import com.example.kakaohair.user.web.MemberInterceptor;
 import com.example.kakaohair.user.web.LoginMemberArgumentResolver;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -56,7 +56,7 @@ class MemberControllerTest {
     private MemberService memberService;
 
     @MockBean
-    private AuthorizationInterceptor authorizationInterceptor;
+    private MemberInterceptor memberInterceptor;
 
     @MockBean
     private LoginMemberArgumentResolver resolver;
@@ -77,7 +77,7 @@ class MemberControllerTest {
     @Test
     void create() throws Exception {
         when(memberService.create(any(Member.class))).thenReturn(TokenResponse.of("TEST"));
-        when(authorizationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        when(memberInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 
         final MemberCreateRequest request = MemberFixture.createDto();
 
@@ -94,7 +94,7 @@ class MemberControllerTest {
     @Test
     void login() throws Exception {
         when(loginService.getCodeUrl()).thenReturn(REDIRECT_URL);
-        when(authorizationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        when(memberInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 
         final MvcResult mvcResult = mockMvc.perform(get("/api/members/login"))
             .andExpect(status().is3xxRedirection())
@@ -112,7 +112,7 @@ class MemberControllerTest {
     @DisplayName("토큰을 정상적으로 반환한다.")
     @Test
     void createToken() throws Exception {
-        when(authorizationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        when(memberInterceptor.preHandle(any(), any(), any())).thenReturn(true);
         final TokenResponse tokenExample = TokenResponse.of("TEST");
         when(loginService.getSocialToken(anyString())).thenReturn(tokenExample);
         final SocialInfo socialInfoExample = MemberFixture.socialInfo();
@@ -132,7 +132,7 @@ class MemberControllerTest {
     void createBadRequest() throws Exception {
         MemberCreateRequest request = MemberFixture.createWrongDto();
         when(memberService.create(any(Member.class))).thenReturn(TokenResponse.of("TEST"));
-        when(authorizationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        when(memberInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 
         mockMvc.perform(post("/api/members")
             .contentType(MediaType.APPLICATION_JSON)
@@ -148,7 +148,7 @@ class MemberControllerTest {
     @Test
     void findMemberById() throws Exception {
         final Member expectedMember = memberWithId();
-        when(authorizationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        when(memberInterceptor.preHandle(any(), any(), any())).thenReturn(true);
         when(resolver.supportsParameter(any())).thenReturn(true);
         when(resolver.resolveArgument(any(MethodParameter.class), any(ModelAndViewContainer.class),
             any(NativeWebRequest.class), any(WebDataBinderFactory.class))).thenReturn(expectedMember);
@@ -167,7 +167,7 @@ class MemberControllerTest {
     @Test
     void deleteById() throws Exception {
         when(memberService.findByMemberId(any())).thenReturn(MemberResponse.from(memberWithId()));
-        when(authorizationInterceptor.preHandle(any(), any(), any())).thenReturn(true);
+        when(memberInterceptor.preHandle(any(), any(), any())).thenReturn(true);
 
         mockMvc.perform(delete("/api/members")
             .header(HttpHeaders.AUTHORIZATION, "TEST_TOKEN")

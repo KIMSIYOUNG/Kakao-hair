@@ -16,8 +16,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
 
-import com.example.kakaohair.common.exception.MemberNotFoundException;
-import com.example.kakaohair.common.exception.TokenInvalidException;
+import com.example.kakaohair.common.exception.notfound.MemberNotFoundException;
+import com.example.kakaohair.common.exception.invalid.TokenInvalidException;
 import com.example.kakaohair.user.member.application.MemberService;
 import com.example.kakaohair.user.member.domain.Member;
 

@@ -19,11 +19,11 @@ import com.example.kakaohair.common.JwtGenerator;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
 
 @ExtendWith(MockitoExtension.class)
-class AuthorizationInterceptorTest {
+class MemberInterceptorTest {
     public static final String TEST_TOKEN = "TEST_TOKEN";
     public static final String TEST_SOCIAL_ID = "TEST_SOCIAL_ID";
 
-    private AuthorizationInterceptor interceptor;
+    private MemberInterceptor interceptor;
     @Mock
     private AuthorizationExtractor extractor;
     @Mock
@@ -31,7 +31,7 @@ class AuthorizationInterceptorTest {
 
     @BeforeEach
     void setUp() {
-        interceptor = new AuthorizationInterceptor(extractor, jwtGenerator);
+        interceptor = new MemberInterceptor(extractor, jwtGenerator);
     }
 
     public static class TestController {

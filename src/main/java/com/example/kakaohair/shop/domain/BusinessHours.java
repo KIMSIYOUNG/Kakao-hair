@@ -6,10 +6,12 @@ import javax.persistence.Embeddable;
 import javax.validation.constraints.NotNull;
 
 import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
 @Getter
 @Embeddable
 public class BusinessHours {

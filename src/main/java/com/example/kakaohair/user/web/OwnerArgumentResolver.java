@@ -12,29 +12,25 @@ import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.example.kakaohair.common.exception.ErrorCode;
 import com.example.kakaohair.common.exception.invalid.TokenInvalidException;
-import com.example.kakaohair.user.member.application.MemberService;
-import com.example.kakaohair.user.member.domain.Member;
-import lombok.RequiredArgsConstructor;
+import com.example.kakaohair.user.owner.Owner;
 
-@RequiredArgsConstructor
 @Component
-public class LoginMemberArgumentResolver implements HandlerMethodArgumentResolver {
-    private final MemberService memberService;
-
+public class OwnerArgumentResolver implements HandlerMethodArgumentResolver {
     @Override
     public boolean supportsParameter(MethodParameter parameter) {
-        return parameter.hasParameterAnnotation(LoginMember.class);
+        return parameter.hasParameterAnnotation(ShopOwner.class);
     }
 
     @Override
-    public Member resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
+    public Object resolveArgument(MethodParameter parameter, ModelAndViewContainer mavContainer,
         NativeWebRequest webRequest, WebDataBinderFactory binderFactory) {
-        String socialId = (String)webRequest.getAttribute("socialId", RequestAttributes.SCOPE_REQUEST);
 
-        if (Objects.isNull(socialId)) {
+        Owner owner = (Owner)webRequest.getAttribute("owner", RequestAttributes.SCOPE_REQUEST);
+
+        if (Objects.isNull(owner)) {
             throw new TokenInvalidException("유효하지 않은 회원입니다.", ErrorCode.TOKEN_INVALID);
         }
 
-        return memberService.findBySocialId(socialId);
+        return owner;
     }
 }
