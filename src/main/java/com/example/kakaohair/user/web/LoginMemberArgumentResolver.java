@@ -11,7 +11,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import com.example.kakaohair.common.exception.ErrorCode;
-import com.example.kakaohair.common.exception.TokenInvalidException;
+import com.example.kakaohair.common.exception.invalid.TokenInvalidException;
 import com.example.kakaohair.user.member.application.MemberService;
 import com.example.kakaohair.user.member.domain.Member;
 import lombok.RequiredArgsConstructor;

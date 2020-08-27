@@ -20,7 +20,7 @@ public class MemberResponse {
         return MemberResponse.builder()
             .id(member.getId())
             .name(member.getMemberInfo().getName())
-            .socialId(member.getMemberInfo().getName())
+            .socialId(member.getMemberInfo().getSocialId())
             .build();
     }
 }

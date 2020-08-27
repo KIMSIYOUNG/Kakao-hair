@@ -119,7 +119,7 @@ Connection: keep-alive
 
 [[resources-member-create]]
 === 회원 생성
-operation::member/create-member[snippets='http-request,http-response,request-fields,response-fields']
+operation::member/create-member[snippets='http-request,http-response,request-headers,request-fields,response-fields']
 
 [[resources-member-create-fail]]
 === 회원 생성 실패

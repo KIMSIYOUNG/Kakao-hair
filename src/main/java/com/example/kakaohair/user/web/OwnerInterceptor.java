@@ -9,32 +9,44 @@ import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import com.example.kakaohair.common.JwtGenerator;
+import com.example.kakaohair.common.exception.invalid.RequestInvalidException;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
+import com.example.kakaohair.user.owner.domain.Owner;
+import com.example.kakaohair.user.owner.application.OwnerService;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
-public class AuthorizationInterceptor extends HandlerInterceptorAdapter {
+public class OwnerInterceptor extends HandlerInterceptorAdapter {
     private final AuthorizationExtractor extractor;
     private final JwtGenerator jwtGenerator;
+    private final OwnerService ownerService;
+
 
     @Override
-    public boolean preHandle(final HttpServletRequest request, final HttpServletResponse response, final Object handler) {
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)  {
         if(!(handler instanceof HandlerMethod)) {
             return false;
         }
+
         if(isExcludePattern(request)) {
             return true;
         }
 
         TokenResponse tokenResponse = extractor.extract(request);
-        String socialId = jwtGenerator.getSubject(tokenResponse.getAccessToken());
-        request.setAttribute("socialId", socialId);
+        final String ownerId = jwtGenerator.getSubject(tokenResponse.getAccessToken());
+
+        try {
+            Owner owner = ownerService.retrieveById(Long.parseLong(ownerId));
+            request.setAttribute("owner", owner);
+        } catch (NumberFormatException e) {
+            throw new RequestInvalidException(ownerId);
+        }
 
         return true;
     }
 
     private boolean isExcludePattern(HttpServletRequest request) {
-        return (HttpMethod.POST.matches(request.getMethod()) && request.getServletPath().equalsIgnoreCase("/api/members"));
+        return (request.getServletPath().contains("/api/shops") && HttpMethod.GET.name().equals(request.getMethod()));
     }
 }

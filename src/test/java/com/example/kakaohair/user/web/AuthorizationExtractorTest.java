@@ -9,7 +9,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.mock.web.MockHttpServletRequest;
 
-import com.example.kakaohair.common.exception.TokenInvalidException;
+import com.example.kakaohair.common.exception.invalid.TokenInvalidException;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
 
 class AuthorizationExtractorTest {

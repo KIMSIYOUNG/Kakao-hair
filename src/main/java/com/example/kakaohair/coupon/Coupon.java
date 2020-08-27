@@ -18,10 +18,8 @@ import lombok.NoArgsConstructor;
 @Entity
 public class Coupon extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "MEMBER_ID")
     private Member member;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "ARITICLE_ID")
     private Product product;
 }

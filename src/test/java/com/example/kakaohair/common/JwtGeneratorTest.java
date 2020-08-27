@@ -7,7 +7,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.example.kakaohair.common.exception.TokenInvalidException;
+import com.example.kakaohair.common.exception.invalid.TokenInvalidException;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
 
 class JwtGeneratorTest {

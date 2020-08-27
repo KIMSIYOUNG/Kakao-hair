@@ -3,6 +3,7 @@ package com.example.kakaohair.docs;
 import static com.example.kakaohair.docs.ApiDocumentationUtils.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.*;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.*;
+import static org.springframework.restdocs.payload.JsonFieldType.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
@@ -19,11 +20,23 @@ public class MemberDocumentation {
                 headerWithName(HttpHeaders.CONTENT_TYPE).description("Content-type")
             ),
             requestFields(
-                fieldWithPath("name").description("프로필로 사용할 이름"),
-                fieldWithPath("socialId").description("소셜 로그인 ID")
+                fieldWithPath("memberInfo.name").type(STRING).description("회원의 이름"),
+                fieldWithPath("memberInfo.socialId").type(STRING).description("회원의 카카오 아이디"),
+                fieldWithPath("memberInfo.email").type(STRING).description("회원의 이메일"),
+                fieldWithPath("memberInfo.profile").type(STRING).description("회원의 프로필 사진"),
+                fieldWithPath("memberInfo.phone").type(STRING).description("회원의 휴대폰 번호"),
+                fieldWithPath("memberInfo.gender").type(STRING).description("성별"),
+                fieldWithPath("memberInfo.birthday").type(STRING).description("회원의 생일"),
+                fieldWithPath("hairInfo.scalp").type(STRING).description("회원의 모발 상태"),
+                fieldWithPath("hairInfo.thickness").type(STRING).description("모발이 두께"),
+                fieldWithPath("hairInfo.curl").type(STRING).description("곱슬 정도"),
+                fieldWithPath("hairInfo.hairCondition").type(STRING).description("손상 정도"),
+                fieldWithPath("hairInfo.volume").type(STRING).description("풍성도"),
+                fieldWithPath("hairInfo.grayHair").type(STRING).description("새치"),
+                fieldWithPath("hairInfo.amount").type(STRING).description("모발의 양")
             ),
             responseFields(
-                fieldWithPath("accessToken").description("사용자가 사용 할 엑세스 토큰")
+                fieldWithPath("accessToken").description("회원에 대한 Access 토큰")
             )
         );
     }
@@ -36,8 +49,8 @@ public class MemberDocumentation {
                 headerWithName(HttpHeaders.CONTENT_TYPE).description("Content-type")
             ),
             requestFields(
-                fieldWithPath("name").description("프로필로 사용할 이름"),
-                fieldWithPath("socialId").description("소셜 로그인 ID")
+                fieldWithPath("memberInfo").description("회원의 개인 정보"),
+                fieldWithPath("hairInfo").description("회원의 모발 정보")
             ),
             getErrorResponseFieldsWithFieldErrors()
         );

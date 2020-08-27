@@ -4,7 +4,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.kakaohair.common.JwtGenerator;
-import com.example.kakaohair.common.exception.MemberNotFoundException;
+import com.example.kakaohair.common.exception.notfound.MemberNotFoundException;
 import com.example.kakaohair.common.infra.kakao.TokenResponse;
 import com.example.kakaohair.user.member.SocialInfo;
 import com.example.kakaohair.user.member.domain.Member;

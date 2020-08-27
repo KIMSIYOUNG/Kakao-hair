@@ -1,4 +1,6 @@
-package com.example.kakaohair.common.exception;
+package com.example.kakaohair.common.exception.notfound;
+
+import com.example.kakaohair.common.exception.ErrorCode;
 
 public class MemberNotFoundException extends NotFoundException {
 

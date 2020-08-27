@@ -2,6 +2,7 @@ package com.example.kakaohair.user.member.application;
 
 import static com.example.kakaohair.user.member.domain.MemberFixture.*;
 import static org.assertj.core.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
 
 import java.util.Optional;
@@ -55,7 +56,11 @@ class MemberServiceTest {
         when(memberRepository.findById(anyLong())).thenReturn(Optional.of(expectedMember));
         final MemberResponse findMember = memberService.findByMemberId(expectedMember.getId());
 
-        assertThat(findMember).isEqualToIgnoringNullFields(expectedMember);
+        assertAll(
+            () -> assertThat(findMember.getId()).isEqualTo(expectedMember.getId()),
+            () -> assertThat(findMember.getName()).isEqualTo(expectedMember.getMemberInfo().getName()),
+            () -> assertThat(findMember.getSocialId()).isEqualTo(expectedMember.getMemberInfo().getSocialId())
+        );
     }
 
     @DisplayName("회원을 삭제하면 repository를 실행시킨다.")
