@@ -28,6 +28,16 @@ public class JwtGenerator {
     public TokenResponse createCustomToken(String socialId) {
         final Claims claims = Jwts.claims().setSubject(socialId);
 
+        return createTokenBy(claims);
+    }
+
+    public TokenResponse createCustomToken(Long id) {
+        final Claims claims = Jwts.claims().setSubject(String.valueOf(id));
+
+        return createTokenBy(claims);
+    }
+
+    private TokenResponse createTokenBy(Claims claims) {
         Date now = new Date();
         Date validateTime = new Date(now.getTime() + expireTime);
 

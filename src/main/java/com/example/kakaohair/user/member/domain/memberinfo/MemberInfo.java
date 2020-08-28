@@ -25,10 +25,12 @@ public class MemberInfo {
 
     private String socialId;
 
+    @NotBlank
     private String email;
 
     private String profile;
 
+    @NotBlank
     private String phone;
 
     @Enumerated(EnumType.STRING)

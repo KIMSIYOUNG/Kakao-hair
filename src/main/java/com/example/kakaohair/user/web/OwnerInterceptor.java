@@ -47,6 +47,6 @@ public class OwnerInterceptor extends HandlerInterceptorAdapter {
     }
 
     private boolean isExcludePattern(HttpServletRequest request) {
-        return (request.getServletPath().contains("/api/shops") && HttpMethod.GET.name().equals(request.getMethod()));
+        return (request.getServletPath().contains("/api/shops") && HttpMethod.GET.name().equalsIgnoreCase(request.getMethod()));
     }
 }
